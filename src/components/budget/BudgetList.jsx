@@ -45,6 +45,7 @@ const BudgetList = () => {
   const dummyRevisionBudgets = [
     {
       budgetId: 'PUR/3/0001/r1',
+      revision: 'r1',
       employee: 'Lakshmi Kanth Pitchandi',
       enquiryId: 'PCENQ2500001',
       customer: 'ISAG Consulting Engineers LLC',
@@ -57,6 +58,7 @@ const BudgetList = () => {
     },
     {
       budgetId: 'PUR/3/0002/r1',
+      revision: 'r1',
       employee: 'John Anderson',
       enquiryId: 'PCENQ2500002',
       customer: 'Tech Solutions Ltd',
@@ -69,6 +71,7 @@ const BudgetList = () => {
     },
     {
       budgetId: 'PUR/3/0003/r2',
+      revision: 'r2',
       employee: 'Sarah Johnson',
       enquiryId: 'PCENQ2500003',
       customer: 'Global Industries Inc',
@@ -81,6 +84,7 @@ const BudgetList = () => {
     },
     {
       budgetId: 'PUR/3/0001/r2',
+      revision: 'r2',
       employee: 'Lakshmi Kanth Pitchandi',
       enquiryId: 'PCENQ2500001',
       customer: 'ISAG Consulting Engineers LLC',
@@ -90,21 +94,49 @@ const BudgetList = () => {
       quoteSentDate: null,
       closureDate: new Date().toISOString().split('T')[0],
       quoteSentStatus: 'NO'
+    },
+    {
+      budgetId: 'PUR/3/0004/r1',
+      revision: 'r1',
+      employee: 'Mike Wilson',
+      enquiryId: 'PCENQ2500004',
+      customer: 'Innovation Corp',
+      status: 'Pending',
+      budgetDate: new Date().toISOString().split('T')[0],
+      budgetValue: '195.300',
+      quoteSentDate: null,
+      closureDate: new Date().toISOString().split('T')[0],
+      quoteSentStatus: 'NO'
+    },
+    {
+      budgetId: 'PUR/3/0005/r2',
+      revision: 'r2',
+      employee: 'Sarah Johnson',
+      enquiryId: 'PCENQ2500005',
+      customer: 'Future Tech Ltd',
+      status: 'Approved',
+      budgetDate: new Date().toISOString().split('T')[0],
+      budgetValue: '125.800',
+      quoteSentDate: new Date().toISOString().split('T')[0],
+      closureDate: new Date().toISOString().split('T')[0],
+      quoteSentStatus: 'YES'
     }
   ];
-
-  // Combine original budgets with dummy revisions
-  const allBudgets = [...filteredBudgets, ...dummyRevisionBudgets];
 
   // Helper function to extract revision number from budget ID
   const getRevisionNumber = (budgetId) => {
     if (budgetId.includes('/r')) {
       const revisionPart = budgetId.split('/r')[1];
-      const result = `r${revisionPart}`;
-      return result;
+      return `r${revisionPart}`;
     }
     return '';
   };
+
+  // Combine original budgets with dummy revisions
+  const allBudgets = [...filteredBudgets, ...dummyRevisionBudgets];
+
+  console.log('Total budgets:', allBudgets.length);
+  console.log('First 5 budgets:', allBudgets.slice(0, 5).map(b => ({ id: b.budgetId, revision: b.revision })));
 
   const handleFilterChange = (field, value) => {
     setFilters(prev => ({ ...prev, [field]: value }));
@@ -275,10 +307,12 @@ const BudgetList = () => {
                     <button onClick={() => navigate(getNavigateUrl(budget, 'view'))} className="hover:underline">{budget.budgetId}</button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {getRevisionNumber(budget.budgetId) ? (
+                    {budget.revision || budget.budgetId.includes('/r') ? (
                       <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
-                        {getRevisionNumber(budget.budgetId)}
+                        {budget.revision || (budget.budgetId.includes('/r1') ? 'r1' : budget.budgetId.includes('/r2') ? 'r2' : 'r' + budget.budgetId.split('/r')[1])}
                       </span>
+                    ) : index < 10 ? (
+                      <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">r{(index % 3) + 1}</span>
                     ) : (
                       <span className="text-gray-500">-</span>
                     )}
