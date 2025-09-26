@@ -3,6 +3,7 @@ import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, Plus, Trash2, Calculator, Upload } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useBudgets } from '../../context/BudgetContext';
+import ProductDropdown from '../ui/ProductDropdown';
 import {
   mockBudgetsData,
   getBudgetById,
@@ -377,6 +378,25 @@ const BudgetCreateEdit = () => {
       }));
     };
 
+    const handleProductSelect = (index, selectedProduct) => {
+      setBudgetData(prev => ({
+        ...prev,
+        budgetDetails: {
+          ...prev.budgetDetails,
+          products: prev.budgetDetails.products.map((product, i) =>
+            i === index ? {
+              ...product,
+              name: selectedProduct.name,
+              description: selectedProduct.description,
+              unit: selectedProduct.unit,
+              unitPrice: selectedProduct.price,
+              amount: product.qty * selectedProduct.price
+            } : product
+          )
+        }
+      }));
+    };
+
     const addProduct = () => {
       setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, products: [...prev.budgetDetails.products, { id: Date.now(), name: '', description: '', unit: 'Pieces', qty: 1, unitPrice: 0, buyingTax: 5, margin: 20, sellingTax: 5, amount: 0 }] } }));
     };
@@ -534,7 +554,15 @@ const BudgetCreateEdit = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {budgetData.budgetDetails.products.map((p, i) => (
                   <tr key={p.id} className="hover:bg-gray-50">
-                    <td><input type="text" value={p.name} onChange={(e) => updateProduct(i, 'name', e.target.value)} className="w-full px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td>
+                      <ProductDropdown
+                        value={p.name}
+                        onChange={(e) => updateProduct(i, 'name', e.target.value)}
+                        onProductSelect={(product) => handleProductSelect(i, product)}
+                        placeholder="Type to search products..."
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm"
+                      />
+                    </td>
                     <td><input type="text" value={p.description || ''} onChange={(e) => updateProduct(i, 'description', e.target.value)} className="w-full px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
                     <td><select value={p.unit || 'Pieces'} onChange={(e) => updateProduct(i, 'unit', e.target.value)} className="w-20 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm"><option>Pieces</option><option>Units</option><option>Kg</option><option>Bags</option></select></td>
                     <td><input type="number" value={p.qty} onChange={(e) => updateProduct(i, 'qty', parseInt(e.target.value) || 0)} className="w-20 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>

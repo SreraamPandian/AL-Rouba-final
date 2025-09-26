@@ -220,10 +220,12 @@ const BudgetList = () => {
                     <button onClick={() => navigate(getNavigateUrl(budget, 'view'))} className="hover:underline">{budget.budgetId}</button>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {getRevisionNumber(budget.budgetId) && (
+                    {getRevisionNumber(budget.budgetId) ? (
                       <span className="px-2 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
                         {getRevisionNumber(budget.budgetId)}
                       </span>
+                    ) : (
+                      <span className="text-gray-500">-</span>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{budget.employee}</td>
