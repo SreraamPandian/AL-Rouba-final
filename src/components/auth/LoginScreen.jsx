@@ -18,7 +18,7 @@ const LoginScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       login(formData.email, formData.role, formData.rememberMe);
@@ -45,8 +45,13 @@ const LoginScreen = () => {
             Enterprise Inventory
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Sign in to your account
+            Sign in with any dummy credentials
           </p>
+          <div className="mt-2 text-xs text-gray-500 bg-gray-100 p-3 rounded-md">
+            <p className="font-medium">Demo Login - Use any credentials:</p>
+            <p>Email: admin@company.com (or any email)</p>
+            <p>Password: password123 (or any password)</p>
+          </div>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -84,7 +89,7 @@ const LoginScreen = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your email"
+                  placeholder="Any email (e.g., admin@company.com)"
                 />
               </div>
             </div>
@@ -104,7 +109,7 @@ const LoginScreen = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your password"
+                  placeholder="Any password (e.g., password123)"
                 />
                 <button
                   type="button"
