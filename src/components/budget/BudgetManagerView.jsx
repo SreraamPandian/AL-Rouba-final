@@ -97,44 +97,41 @@ const BudgetManagerView = () => {
             </div>
 
             {/* Budget Details - Same as BudgetView but read-only for managers */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Payment Days</label>
-                    <input value={budget.paymentDays} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.paymentDays || budget.paymentDays || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Tax Type</label>
-                    <input value={budget.taxType} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.taxType || budget.taxType || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Delivery Days</label>
-                    <input value={budget.deliveryDays} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.deliveryDays || budget.deliveryDays || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Licenses Offering</label>
-                    <input value={budget.licensesOffering} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.licensesOffering || budget.licensesOffering || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Payment Term</label>
-                    <input value={budget.paymentTerm} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.paymentTerm || budget.paymentTerm || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Currency</label>
-                    <input value={budget.currency} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.currency || budget.currency || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
                 <div>
                     <label className="block text-sm font-medium mb-1 text-gray-700">Shipping</label>
-                    <input value={budget.shipping} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                    <input value={budget.budgetDetails?.shipping || budget.shipping || ''} readOnly className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
                 </div>
             </div>
 
             {/* Notes */}
             <div className="mb-6">
                 <label className="block text-sm font-medium mb-2 text-gray-700">Notes:</label>
-                <textarea value={budget.notes} readOnly rows={3} className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
+                <textarea value={budget.budgetDetails?.notes || budget.notes || ''} readOnly rows={3} className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900" />
             </div>
 
             {/* Products Table */}

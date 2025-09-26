@@ -22,7 +22,7 @@ const BudgetView = () => {
             </div>
         );
     }
-    
+
     const subTotal = budget.products.reduce((sum, p) => sum + (p.qty * p.unitPrice), 0);
     const discountAmount = (subTotal * budget.discount) / 100;
     const totalAfterDiscount = subTotal - discountAmount;
@@ -80,19 +80,40 @@ const BudgetView = () => {
             <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-6">Budget Details</h2>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                    <input value={budget.paymentDays} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
-                    <input value={budget.taxType} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
-                    <input value={budget.deliveryDays} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
-                    <input value={budget.licensesOffering} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
-                    <input value={budget.paymentTerm} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
-                    <input value={budget.currency} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
-                    <input value={budget.shipping} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Payment Days:</label>
+                        <input value={budget.budgetDetails?.paymentDays || budget.paymentDays || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Tax Type:</label>
+                        <input value={budget.budgetDetails?.taxType || budget.taxType || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Delivery Days:</label>
+                        <input value={budget.budgetDetails?.deliveryDays || budget.deliveryDays || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Licenses Offering:</label>
+                        <input value={budget.budgetDetails?.licensesOffering || budget.licensesOffering || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Payment Term:</label>
+                        <input value={budget.budgetDetails?.paymentTerm || budget.paymentTerm || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Currency:</label>
+                        <input value={budget.budgetDetails?.currency || budget.currency || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
+                    <div>
+                        <label className="block text-sm text-gray-600 mb-1">Shipping:</label>
+                        <input value={budget.budgetDetails?.shipping || budget.shipping || ''} disabled className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    </div>
                 </div>
                 <div className="mb-6">
                     <label className="block text-sm font-medium mb-2 text-gray-700">Notes:</label>
-                    <textarea value={budget.notes} disabled rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
+                    <textarea value={budget.budgetDetails?.notes || budget.notes || ''} disabled rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100" />
                 </div>
-                
+
                 <h3 className="text-lg font-medium mb-4">Products</h3>
                 <div className="overflow-x-auto mb-6">
                     <table className="min-w-full bg-white border">

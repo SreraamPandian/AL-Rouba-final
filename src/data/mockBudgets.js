@@ -20,6 +20,38 @@ export const mockBudgetsData = Array.from({ length: 25 }, (_, index) => {
     branch: faker.helpers.arrayElement(['DSS Oman', 'DSS Dubai', 'DSS Kuwait', 'DSS Qatar', 'DSS Bahrain']),
     billingAddress: faker.location.streetAddress(true),
     dispatchAddress: faker.location.streetAddress(true),
+
+    // Budget details structure
+    budgetDetails: {
+      paymentDays: faker.helpers.arrayElement(['15 Days', '30 Days', '45 Days', '60 Days', '90 Days', '120 Days']),
+      taxType: faker.helpers.arrayElement(['VAT 5%', 'VAT 10%', 'VAT 15%', 'GST 5%', 'GST 12%', 'GST 18%', 'No Tax']),
+      deliveryDays: faker.helpers.arrayElement(['7 Days', '14 Days', '21 Days', '30 Days', '45 Days', '60 Days', '90 Days']),
+      licensesOffering: faker.helpers.arrayElement(['Standard', 'Premium', 'Enterprise', 'Professional', 'Basic', 'Custom']),
+      paymentTerm: faker.helpers.arrayElement(['Advance', 'Credit', 'COD', 'L/C', 'Net Banking', 'Cheque']),
+      currency: faker.helpers.arrayElement(['OMR', 'USD', 'AED', 'EUR', 'GBP', 'INR']),
+      shipping: faker.helpers.arrayElement(['FOB', 'CIF', 'CFR', 'EXW', 'DDP', 'DDU', 'FAS']),
+      notes: 'Standard Terms and Conditions Apply.',
+      products: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => ({
+        id: faker.string.uuid(),
+        name: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        qty: faker.number.int({ min: 5, max: 50 }),
+        unit: 'Pieces',
+        unitPrice: Number(faker.commerce.price()),
+        buyingTax: 5,
+        margin: 20,
+        sellingTax: 5,
+      })),
+      freightCharges: {
+        landFreight: faker.number.float({ min: 10, max: 100 }),
+        airFreight: 0,
+        seaFreight: 0
+      },
+      discount: faker.number.int({ min: 0, max: 10 }),
+      vat: 5,
+    },
+
+    // Legacy fields for backward compatibility (will be moved to budgetDetails gradually)
     paymentDays: faker.helpers.arrayElement(['15 Days', '30 Days', '45 Days', '60 Days']),
     taxType: 'VAT 5%',
     deliveryDays: '14 Days',
