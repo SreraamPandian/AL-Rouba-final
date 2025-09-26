@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://al-rouba-final.vercel.app/sitemap.xml
