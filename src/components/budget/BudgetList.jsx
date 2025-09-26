@@ -41,6 +41,18 @@ const BudgetList = () => {
     return matchesEmployee && matchesSearch;
   });
 
+  // Add some dummy revision data for testing
+  const dummyRevisionBudgets = [
+    { ...filteredBudgets[0], budgetId: 'PUR/3/0001/r1', status: 'Approved' },
+    { ...filteredBudgets[1], budgetId: 'PUR/3/0002/r1', status: 'Pending' },
+    { ...filteredBudgets[2], budgetId: 'PUR/3/0003/r2', status: 'Won' },
+    { ...filteredBudgets[0], budgetId: 'PUR/3/0001/r2', status: 'Rejected' },
+    { ...filteredBudgets[3], budgetId: 'PUR/3/0004/r1', status: 'Approved' }
+  ];
+
+  // Combine original budgets with dummy revisions
+  const allBudgets = [...filteredBudgets, ...dummyRevisionBudgets];
+
   // Helper function to extract revision number from budget ID
   const getRevisionNumber = (budgetId) => {
     if (budgetId.includes('/r')) {
@@ -214,8 +226,8 @@ const BudgetList = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredBudgets.slice(0, showEntries).map((budget) => (
-                <tr key={budget.budgetId} className="hover:bg-gray-50">
+              {allBudgets.slice(0, showEntries).map((budget, index) => (
+                <tr key={`${budget.budgetId}-${index}`} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
                     <button onClick={() => navigate(getNavigateUrl(budget, 'view'))} className="hover:underline">{budget.budgetId}</button>
                   </td>
@@ -273,7 +285,7 @@ const BudgetList = () => {
         </div>
 
         <div className="px-6 py-3 border-t border-gray-200 text-sm text-gray-700">
-          Showing 1 to {Math.min(showEntries, filteredBudgets.length)} of {filteredBudgets.length} entries
+          Showing 1 to {Math.min(showEntries, allBudgets.length)} of {allBudgets.length} entries
         </div>
       </div>
       {isQuoteModalOpen && selectedBudget && (
