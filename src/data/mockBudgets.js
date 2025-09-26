@@ -377,6 +377,271 @@ mockBudgetsData.push({
   vat: 5,
 });
 
+// Additional revision entries for better data coverage
+mockBudgetsData.push({
+  budgetId: 'PUR/3/0004/r1',
+  employee: 'John Anderson',
+  enquiryId: 'PCENQ2500004',
+  customer: 'Advanced Systems LLC',
+  status: 'Approved',
+  budgetDate: new Date().toISOString().split('T')[0],
+  budgetValue: 134.250,
+  quoteSentDate: new Date().toISOString().split('T')[0],
+  closureDate: new Date().toISOString().split('T')[0],
+  quoteSentStatus: 'YES',
+  branch: 'DSS Qatar',
+  billingAddress: '321 Business Bay, Doha',
+  dispatchAddress: '321 Business Bay, Doha',
+  budgetDetails: {
+    paymentDays: '30 Days',
+    taxType: 'VAT 5%',
+    deliveryDays: '21 Days',
+    licensesOffering: 'Premium',
+    paymentTerm: 'Credit',
+    currency: 'OMR',
+    shipping: 'CIF',
+    notes: 'First revision - premium package upgrade.',
+    products: [{
+      id: faker.string.uuid(),
+      name: 'Advanced Control System',
+      description: 'Upgraded control module with premium features',
+      qty: 12,
+      unit: 'Units',
+      unitPrice: 11.19,
+      buyingTax: 5,
+      margin: 20,
+      sellingTax: 5,
+    }],
+    freightCharges: {
+      landFreight: 45.0,
+      airFreight: 0,
+      seaFreight: 0
+    },
+    discount: 3,
+    vat: 5,
+  }
+});
+
+mockBudgetsData.push({
+  budgetId: 'PUR/3/0004/r2',
+  employee: 'John Anderson',
+  enquiryId: 'PCENQ2500004',
+  customer: 'Advanced Systems LLC',
+  status: 'Won',
+  budgetDate: new Date().toISOString().split('T')[0],
+  budgetValue: 129.500,
+  quoteSentDate: new Date().toISOString().split('T')[0],
+  closureDate: new Date().toISOString().split('T')[0],
+  quoteSentStatus: 'YES',
+  branch: 'DSS Qatar',
+  billingAddress: '321 Business Bay, Doha',
+  dispatchAddress: '321 Business Bay, Doha',
+  budgetDetails: {
+    paymentDays: '30 Days',
+    taxType: 'VAT 5%',
+    deliveryDays: '21 Days',
+    licensesOffering: 'Premium',
+    paymentTerm: 'Credit',
+    currency: 'OMR',
+    shipping: 'CIF',
+    notes: 'Second revision - final negotiated terms. Deal won!',
+    products: [{
+      id: faker.string.uuid(),
+      name: 'Advanced Control System',
+      description: 'Final negotiated specifications',
+      qty: 12,
+      unit: 'Units',
+      unitPrice: 10.79,
+      buyingTax: 5,
+      margin: 20,
+      sellingTax: 5,
+    }],
+    freightCharges: {
+      landFreight: 45.0,
+      airFreight: 0,
+      seaFreight: 0
+    },
+    discount: 5,
+    vat: 5,
+  }
+});
+
+mockBudgetsData.push({
+  budgetId: 'PUR/3/0005/r1',
+  employee: 'Lakshmi Kanth Pitchandi',
+  enquiryId: 'PCENQ2500005',
+  customer: 'Emirates Trading Co.',
+  status: 'Rejected',
+  budgetDate: new Date().toISOString().split('T')[0],
+  budgetValue: 78.900,
+  quoteSentDate: null,
+  closureDate: new Date().toISOString().split('T')[0],
+  quoteSentStatus: 'NO',
+  branch: 'DSS Dubai',
+  billingAddress: '654 Trade Center, Dubai',
+  dispatchAddress: '654 Trade Center, Dubai',
+  budgetDetails: {
+    paymentDays: '60 Days',
+    taxType: 'VAT 10%',
+    deliveryDays: '30 Days',
+    licensesOffering: 'Basic',
+    paymentTerm: 'L/C',
+    currency: 'AED',
+    shipping: 'FOB',
+    notes: 'First revision - pricing adjustments for competitive bid.',
+    products: [{
+      id: faker.string.uuid(),
+      name: 'Trading Equipment',
+      description: 'Standard trading tools with basic features',
+      qty: 15,
+      unit: 'Pieces',
+      unitPrice: 5.26,
+      buyingTax: 5,
+      margin: 15,
+      sellingTax: 5,
+    }],
+    freightCharges: {
+      landFreight: 20.0,
+      airFreight: 0,
+      seaFreight: 0
+    },
+    discount: 8,
+    vat: 5,
+  }
+});
+
+mockBudgetsData.push({
+  budgetId: 'PUR/3/0006/r1',
+  employee: 'Sarah Johnson',
+  enquiryId: 'PCENQ2500006',
+  customer: 'Precision Engineering Ltd.',
+  status: 'Pending',
+  budgetDate: new Date().toISOString().split('T')[0],
+  budgetValue: 167.825,
+  quoteSentDate: null,
+  closureDate: new Date().toISOString().split('T')[0],
+  quoteSentStatus: 'NO',
+  branch: 'DSS Bahrain',
+  billingAddress: '987 Engineering Hub, Manama',
+  dispatchAddress: '987 Engineering Hub, Manama',
+  budgetDetails: {
+    paymentDays: '45 Days',
+    taxType: 'VAT 5%',
+    deliveryDays: '45 Days',
+    licensesOffering: 'Enterprise',
+    paymentTerm: 'Advance',
+    currency: 'USD',
+    shipping: 'DDP',
+    notes: 'First revision - enterprise features added per client request.',
+    products: [{
+      id: faker.string.uuid(),
+      name: 'Precision Measurement Tools',
+      description: 'High-precision engineering instruments',
+      qty: 6,
+      unit: 'Sets',
+      unitPrice: 27.97,
+      buyingTax: 5,
+      margin: 25,
+      sellingTax: 5,
+    }],
+    freightCharges: {
+      landFreight: 65.0,
+      airFreight: 0,
+      seaFreight: 0
+    },
+    discount: 2,
+    vat: 5,
+  }
+});
+
+mockBudgetsData.push({
+  budgetId: 'PUR/3/0006/r2',
+  employee: 'Sarah Johnson',
+  enquiryId: 'PCENQ2500006',
+  customer: 'Precision Engineering Ltd.',
+  status: 'Approved',
+  budgetDate: new Date().toISOString().split('T')[0],
+  budgetValue: 159.750,
+  quoteSentDate: new Date().toISOString().split('T')[0],
+  closureDate: new Date().toISOString().split('T')[0],
+  quoteSentStatus: 'YES',
+  branch: 'DSS Bahrain',
+  billingAddress: '987 Engineering Hub, Manama',
+  dispatchAddress: '987 Engineering Hub, Manama',
+  budgetDetails: {
+    paymentDays: '45 Days',
+    taxType: 'VAT 5%',
+    deliveryDays: '30 Days',
+    licensesOffering: 'Enterprise',
+    paymentTerm: 'Advance',
+    currency: 'USD',
+    shipping: 'DDP',
+    notes: 'Second revision - delivery time optimized, approved by management.',
+    products: [{
+      id: faker.string.uuid(),
+      name: 'Precision Measurement Tools',
+      description: 'Optimized delivery schedule for faster deployment',
+      qty: 6,
+      unit: 'Sets',
+      unitPrice: 26.63,
+      buyingTax: 5,
+      margin: 25,
+      sellingTax: 5,
+    }],
+    freightCharges: {
+      landFreight: 65.0,
+      airFreight: 0,
+      seaFreight: 0
+    },
+    discount: 4,
+    vat: 5,
+  }
+});
+
+mockBudgetsData.push({
+  budgetId: 'PUR/3/0007/r1',
+  employee: 'Mike Wilson',
+  enquiryId: 'PCENQ2500007',
+  customer: 'Industrial Solutions Group',
+  status: 'Pending',
+  budgetDate: new Date().toISOString().split('T')[0],
+  budgetValue: 198.650,
+  quoteSentDate: null,
+  closureDate: new Date().toISOString().split('T')[0],
+  quoteSentStatus: 'NO',
+  branch: 'DSS Oman',
+  billingAddress: '159 Industrial Complex, Muscat',
+  dispatchAddress: '159 Industrial Complex, Muscat',
+  budgetDetails: {
+    paymentDays: '90 Days',
+    taxType: 'GST 12%',
+    deliveryDays: '60 Days',
+    licensesOffering: 'Professional',
+    paymentTerm: 'Net Banking',
+    currency: 'EUR',
+    shipping: 'CFR',
+    notes: 'First revision - extended payment terms for large order.',
+    products: [{
+      id: faker.string.uuid(),
+      name: 'Industrial Automation Suite',
+      description: 'Complete automation package with professional support',
+      qty: 4,
+      unit: 'Systems',
+      unitPrice: 49.66,
+      buyingTax: 5,
+      margin: 30,
+      sellingTax: 5,
+    }],
+    freightCharges: {
+      landFreight: 95.0,
+      airFreight: 0,
+      seaFreight: 0
+    },
+    discount: 6,
+    vat: 5,
+  }
+});
+
 export function getBudgetById(id) {
   return mockBudgetsData.find(b => b.budgetId === id);
 }
