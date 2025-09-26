@@ -41,13 +41,56 @@ const BudgetList = () => {
     return matchesEmployee && matchesSearch;
   });
 
-  // Add some dummy revision data for testing
+  // Add some dummy revision data for testing - always visible
   const dummyRevisionBudgets = [
-    { ...filteredBudgets[0], budgetId: 'PUR/3/0001/r1', status: 'Approved' },
-    { ...filteredBudgets[1], budgetId: 'PUR/3/0002/r1', status: 'Pending' },
-    { ...filteredBudgets[2], budgetId: 'PUR/3/0003/r2', status: 'Won' },
-    { ...filteredBudgets[0], budgetId: 'PUR/3/0001/r2', status: 'Rejected' },
-    { ...filteredBudgets[3], budgetId: 'PUR/3/0004/r1', status: 'Approved' }
+    {
+      budgetId: 'PUR/3/0001/r1',
+      employee: 'Lakshmi Kanth Pitchandi',
+      enquiryId: 'PCENQ2500001',
+      customer: 'ISAG Consulting Engineers LLC',
+      status: 'Approved',
+      budgetDate: new Date().toISOString().split('T')[0],
+      budgetValue: '150.500',
+      quoteSentDate: null,
+      closureDate: new Date().toISOString().split('T')[0],
+      quoteSentStatus: 'NO'
+    },
+    {
+      budgetId: 'PUR/3/0002/r1',
+      employee: 'John Anderson',
+      enquiryId: 'PCENQ2500002',
+      customer: 'Tech Solutions Ltd',
+      status: 'Pending',
+      budgetDate: new Date().toISOString().split('T')[0],
+      budgetValue: '89.250',
+      quoteSentDate: null,
+      closureDate: new Date().toISOString().split('T')[0],
+      quoteSentStatus: 'NO'
+    },
+    {
+      budgetId: 'PUR/3/0003/r2',
+      employee: 'Sarah Johnson',
+      enquiryId: 'PCENQ2500003',
+      customer: 'Global Industries Inc',
+      status: 'Won',
+      budgetDate: new Date().toISOString().split('T')[0],
+      budgetValue: '275.800',
+      quoteSentDate: new Date().toISOString().split('T')[0],
+      closureDate: new Date().toISOString().split('T')[0],
+      quoteSentStatus: 'YES'
+    },
+    {
+      budgetId: 'PUR/3/0001/r2',
+      employee: 'Lakshmi Kanth Pitchandi',
+      enquiryId: 'PCENQ2500001',
+      customer: 'ISAG Consulting Engineers LLC',
+      status: 'Rejected',
+      budgetDate: new Date().toISOString().split('T')[0],
+      budgetValue: '165.750',
+      quoteSentDate: null,
+      closureDate: new Date().toISOString().split('T')[0],
+      quoteSentStatus: 'NO'
+    }
   ];
 
   // Combine original budgets with dummy revisions
