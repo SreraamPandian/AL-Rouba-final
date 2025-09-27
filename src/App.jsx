@@ -32,6 +32,7 @@ import PurchaseOrderList from './components/purchase/PurchaseOrderList';
 import InventoryBlockingList from './components/inventory/InventoryBlockingList';
 import InventoryBlockDetails from './components/inventory/InventoryBlockDetails';
 import TermsAndConditions from './components/settings/TermsAndConditions';
+import CheckInList from './components/checkin/CheckInList';
 
 import AuditTrail from './components/audit/AuditTrail';
 import Settings from './components/settings/Settings';
@@ -82,6 +83,8 @@ function AppRoutes() {
 
         <Route path="/blocking" element={<InventoryBlockingList />} />
         <Route path="/blocking/:id" element={<InventoryBlockDetails />} />
+
+        <Route path="/checkin" element={<CheckInList />} />
 
         <Route path="/purchase-orders" element={<PurchaseOrderList />} />
         <Route path="/purchase-orders/new" element={<PurchaseOrderList />} />
