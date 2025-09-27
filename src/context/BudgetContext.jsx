@@ -27,7 +27,11 @@ export const BudgetProvider = ({ children }) => {
         setBudgets(prev => prev.map(b => b.budgetId === id ? { ...b, ...updates } : b));
     }, []);
 
-    const value = { budgets, findBudget, addBudget, updateBudget };
+    const deleteBudget = useCallback((id) => {
+        setBudgets(prev => prev.filter(b => b.budgetId !== id));
+    }, []);
+
+    const value = { budgets, findBudget, addBudget, updateBudget, deleteBudget };
 
     return (
         <BudgetContext.Provider value={value}>

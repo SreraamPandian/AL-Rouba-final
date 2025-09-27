@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Eye, Edit, MoreHorizontal, Search, RotateCcw, Download } from 'lucide-react';
+import { Plus, Eye, Edit, MoreHorizontal, Search, RotateCcw, Download, Trash2 } from 'lucide-react';
 import { useBudgets } from '../../context/BudgetContext';
 import { useAuth } from '../../context/AuthContext';
 import { getNextRevisionId } from '../../data/mockBudgets';
@@ -9,7 +9,7 @@ import QuoteSentModal from './QuoteSentModal';
 const BudgetList = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { budgets, updateBudget } = useBudgets();
+  const { budgets, updateBudget, deleteBudget } = useBudgets();
 
   const [filters, setFilters] = useState({
     employee: 'ALL',
@@ -358,6 +358,16 @@ const BudgetList = () => {
                           <button onClick={() => handleMenuAction(budget.budgetId, 'Download')} className="block w-full text-left px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-medium">Download</button>
                           <button onClick={() => handleMenuAction(budget.budgetId, 'Won')} className="block w-full text-left px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium">Won</button>
                           <button onClick={() => handleMenuAction(budget.budgetId, 'Lose')} className="block w-full text-left px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-medium">Lose</button>
+                          <button onClick={() => {
+                            setOpenMenuId(null);
+                            const confirmed = window.confirm(`Are you sure you want to delete budget ${budget.budgetId}? This action cannot be undone.`);
+                            if (confirmed) {
+                              deleteBudget(budget.budgetId);
+                            }
+                          }} className="block w-full text-left px-4 py-2 bg-red-700 hover:bg-red-800 text-white font-medium flex items-center space-x-2">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            <span>Delete</span>
+                          </button>
                         </div>
                       </div>
                     )}
