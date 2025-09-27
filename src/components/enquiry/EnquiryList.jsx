@@ -18,9 +18,6 @@ const EnquiryList = () => {
     currentStage: faker.helpers.arrayElement([
       'New Enquiry', 'Budget Drafted', 'Budget Submitted', 'Budget Approved',
       'Quotation Generated', 'Quotation Revised', 'Received Order', 'Sales Order Generated', 'Closed'
-    ]),
-    nextAction: faker.helpers.arrayElement([
-      'Create Budget', 'Submit for Approval', 'Generate Quote', 'Follow up'
     ])
   }));
 
@@ -64,15 +61,7 @@ const EnquiryList = () => {
       label: 'Created Date',
       sortable: true
     },
-    {
-      key: 'nextAction',
-      label: 'Next Action',
-      render: (value) => (
-        <span className="text-sm text-gray-600" title={value}>
-          {value}
-        </span>
-      )
-    },
+    // nextAction column removed
     {
       key: 'actions',
       label: 'Actions',
