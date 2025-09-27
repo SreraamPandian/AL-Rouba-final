@@ -11,6 +11,9 @@ const BudgetView = () => {
     const { findBudget } = useBudgets();
     const budget = findBudget(decodedId);
 
+    // safe defaults for freightCharges to avoid runtime errors when undefined
+    const safeBudgetFreight = budget?.freightCharges || { landFreight: 0, airFreight: 0, seaFreight: 0 };
+
     if (!budget) {
         return (
             <div className="text-center p-8">
@@ -27,7 +30,7 @@ const BudgetView = () => {
     const discountAmount = (subTotal * budget.discount) / 100;
     const totalAfterDiscount = subTotal - discountAmount;
     const vatAmount = (totalAfterDiscount * budget.vat) / 100;
-    const freightTotal = (budget.freightCharges?.landFreight || 0) + (budget.freightCharges?.airFreight || 0) + (budget.freightCharges?.seaFreight || 0);
+    const freightTotal = (safeBudgetFreight.landFreight || 0) + (safeBudgetFreight.airFreight || 0) + (safeBudgetFreight.seaFreight || 0);
     const grandTotal = totalAfterDiscount + vatAmount + freightTotal;
 
     return (
@@ -158,9 +161,9 @@ const BudgetView = () => {
                     <div>
                         <h3 className="text-lg font-medium mb-4 text-gray-900">Freight Charges</h3>
                         <div className="space-y-3">
-                            <div className="flex justify-between"><p>Land Freight:</p><p>{budget.freightCharges.landFreight.toFixed(2)}</p></div>
-                            <div className="flex justify-between"><p>Air Freight:</p><p>{budget.freightCharges.airFreight.toFixed(2)}</p></div>
-                            <div className="flex justify-between"><p>Sea Freight:</p><p>{budget.freightCharges.seaFreight.toFixed(2)}</p></div>
+                            <div className="flex justify-between"><p>Land Freight:</p><p>{(safeBudgetFreight.landFreight || 0).toFixed(2)}</p></div>
+                            <div className="flex justify-between"><p>Air Freight:</p><p>{(safeBudgetFreight.airFreight || 0).toFixed(2)}</p></div>
+                            <div className="flex justify-between"><p>Sea Freight:</p><p>{(safeBudgetFreight.seaFreight || 0).toFixed(2)}</p></div>
                         </div>
                     </div>
                     <div>

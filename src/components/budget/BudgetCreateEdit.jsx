@@ -476,10 +476,12 @@ const BudgetCreateEdit = () => {
       setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, products: prev.budgetDetails.products.filter((_, i) => i !== index) } }));
     };
 
-    const subTotal = budgetData.budgetDetails.products.reduce((sum, p) => sum + (p.qty * (p.unitPrice * (p.conversionRate || 1))), 0);
-    const discount = (subTotal * budgetData.budgetDetails.discount) / 100;
-    const vatAmount = ((subTotal - discount) * budgetData.budgetDetails.vat) / 100;
-    const freight = budgetData.budgetDetails.freightCharges.landFreight + budgetData.budgetDetails.freightCharges.airFreight + budgetData.budgetDetails.freightCharges.seaFreight;
+    const productsForCalc = budgetData.budgetDetails.products || [];
+    const subTotal = productsForCalc.reduce((sum, p) => sum + (p.qty * (p.unitPrice * (p.conversionRate || 1))), 0);
+    const discount = (subTotal * (budgetData.budgetDetails.discount || 0)) / 100;
+    const vatAmount = ((subTotal - discount) * (budgetData.budgetDetails.vat || 0)) / 100;
+    const freightChargesForCalc = budgetData.budgetDetails.freightCharges || { landFreight: 0, airFreight: 0, seaFreight: 0 };
+    const freight = (freightChargesForCalc.landFreight || 0) + (freightChargesForCalc.airFreight || 0) + (freightChargesForCalc.seaFreight || 0);
     const grandTotal = subTotal - discount + vatAmount + freight;
 
     return (

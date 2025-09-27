@@ -91,6 +91,9 @@ const BudgetApproval = () => {
         );
     }
 
+    // ensure budget.freightCharges exists to avoid runtime errors
+    const safeBudgetFreight = budget?.freightCharges || { landFreight: 0, airFreight: 0, seaFreight: 0 };
+
     const subTotal = (editable?.products || []).reduce((sum, p) => sum + (p.qty * p.unitPrice), 0);
     const discountAmount = (subTotal * (editable?.discount || 0)) / 100;
     const totalAfterDiscount = subTotal - discountAmount;
@@ -202,9 +205,9 @@ const BudgetApproval = () => {
                         <div>
                             <h3 className="text-lg font-medium mb-4 text-gray-900">Freight Charges</h3>
                             <div className="space-y-3">
-                                <div className="flex justify-between"><p>Land Freight:</p><p>{budget.freightCharges.landFreight.toFixed(2)}</p></div>
-                                <div className="flex justify-between"><p>Air Freight:</p><p>{budget.freightCharges.airFreight.toFixed(2)}</p></div>
-                                <div className="flex justify-between"><p>Sea Freight:</p><p>{budget.freightCharges.seaFreight.toFixed(2)}</p></div>
+                                <div className="flex justify-between"><p>Land Freight:</p><p>{(safeBudgetFreight.landFreight || 0).toFixed(2)}</p></div>
+                                <div className="flex justify-between"><p>Air Freight:</p><p>{(safeBudgetFreight.airFreight || 0).toFixed(2)}</p></div>
+                                <div className="flex justify-between"><p>Sea Freight:</p><p>{(safeBudgetFreight.seaFreight || 0).toFixed(2)}</p></div>
                             </div>
                         </div>
                         <div>
