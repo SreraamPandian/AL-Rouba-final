@@ -492,12 +492,12 @@ const BudgetCreateEdit = () => {
               <option value="AED">AED - UAE Dirham</option>
               <option value="EUR">EUR - Euro</option>
               <option value="GBP">GBP - British Pound</option>
-              <option value="INR">INR - Indian Rupee</option>
+              {/* INR removed - use OMR for local currency */}
             </select>
           </div>
         </div>
         <div className="flex justify-between items-center mb-4">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Terms and Conditions</button>
+          <button onClick={() => navigate('/terms')} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Terms and Conditions</button>
         </div>
         <div className="mb-6">
           <label className="block text-sm font-medium mb-2 text-gray-700">Notes:</label>
@@ -584,7 +584,7 @@ const BudgetCreateEdit = () => {
                         <option value="AED">AED</option>
                         <option value="EUR">EUR</option>
                         <option value="GBP">GBP</option>
-                        <option value="INR">INR</option>
+                        {/* INR removed */}
                       </select>
                     </td>
                     <td><input type="number" value={p.conversionRate || 1} onChange={(e) => updateProduct(i, 'conversionRate', parseFloat(e.target.value) || 1)} className="w-24 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" step="0.0001" /></td>

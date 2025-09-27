@@ -22,14 +22,31 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: 'Budget and Quote', href: '/budgets', icon: Calculator, color: 'text-gray-500' },
     { name: 'Received Orders', href: '/received-orders', icon: ShoppingCart, color: 'text-gray-500' },
     { name: 'Sales Orders', href: '/sales-orders', icon: Package, color: 'text-gray-500' },
+    {
+      name: 'Purchase Order',
+      icon: ShoppingCart,
+      color: 'text-gray-500',
+      children: [
+        { name: 'Create Purchase Order', href: '/purchase-orders/new', icon: Receipt, color: 'text-gray-500' },
+        { name: 'Check In Process', href: '/purchase-orders/check-in', icon: ArrowDownCircle, color: 'text-gray-500' }
+      ]
+    },
+    {
+      name: 'New Sales Order',
+      icon: Package,
+      color: 'text-gray-500',
+      children: [
+        { name: 'Order Management', href: '/sales-orders/manage', icon: FileText, color: 'text-gray-500' },
+        { name: 'Confirm Order', href: '/sales-orders/confirm', icon: ArrowUpCircle, color: 'text-gray-500' },
+        { name: 'Invoice', href: '/sales-orders/invoice', icon: ArrowDownCircle, color: 'text-gray-500' }
+      ]
+    },
     { name: 'Inventory Blocking', href: '/blocking', icon: Lock, color: 'text-gray-500' },
     { name: 'FPO', href: '/fpo', icon: Truck, color: 'text-gray-500' },
-    { name: 'Inward', href: '/inward', icon: ArrowDownCircle, color: 'text-gray-500' },
-    { name: 'Issuance', href: '/issuance', icon: ArrowUpCircle, color: 'text-gray-500' },
-    { name: 'Invoices', href: '/invoices', icon: Receipt, color: 'text-gray-500' },
-    { 
-      name: 'Master', 
-      icon: Archive, 
+    { name: 'Inventory Management', href: '/inventory', icon: Package, color: 'text-gray-500' },
+    {
+      name: 'Master',
+      icon: Archive,
       color: 'text-gray-500',
       children: [
         { name: 'Terms & Conditions', href: '/terms', icon: FileText, color: 'text-gray-500' },

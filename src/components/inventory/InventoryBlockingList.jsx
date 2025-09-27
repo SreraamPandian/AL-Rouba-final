@@ -8,8 +8,7 @@ const InventoryBlockingList = () => {
   const navigate = useNavigate();
   const [selectedBlocks, setSelectedBlocks] = useState([]);
   const [filter, setFilter] = useState('all');
-  const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [selectedBlock, setSelectedBlock] = useState(null);
+  // details page navigation will show block details
 
   const generateBlocks = () => {
     const currentDate = new Date();
@@ -44,6 +43,9 @@ const InventoryBlockingList = () => {
         id: `BLK-${String(index + 1).padStart(4, '0')}`,
         salesOrderId: `SO-2024-${String(faker.number.int({ min: 1, max: 150 })).padStart(3, '0')}`,
         product: `${faker.helpers.arrayElement(productNames)} (${faker.string.alphanumeric(8).toUpperCase()})`,
+        customer: faker.company.name(),
+        enquiryId: `ENQ-2024-${String(faker.number.int({ min: 1, max: 999 })).padStart(3, '0')}`,
+        allocatedSalesPerson: faker.person.fullName(),
         blockedQty: faker.number.int({ min: 10, max: 500 }),
         availableQty,
         allocatedQty,
@@ -76,15 +78,7 @@ const InventoryBlockingList = () => {
   const expiredBlocks = blocks.filter(block => block.status === 'Expired');
   const activeBlocks = blocks.filter(block => block.status === 'Active');
 
-  const handleViewDetails = (block) => {
-    setSelectedBlock(block);
-    setViewModalOpen(true);
-  };
-
-  const closeViewModal = () => {
-    setViewModalOpen(false);
-    setSelectedBlock(null);
-  };
+  // navigation to details page will be used instead of modal
 
   const handleReleaseBlock = (blockId) => {
     setBlocks(prevBlocks =>
@@ -94,13 +88,7 @@ const InventoryBlockingList = () => {
     );
   };
 
-  const handleBulkReleaseExpired = () => {
-    setBlocks(prevBlocks =>
-      prevBlocks.map(block =>
-        block.status === 'Expired' ? { ...block, status: 'Released' } : block
-      )
-    );
-  };
+  // removed bulk release expired action per UI update
 
   const handleBulkReleaseSelected = () => {
     setBlocks(prevBlocks =>
@@ -131,14 +119,12 @@ const InventoryBlockingList = () => {
 
   const columns = [
     { key: 'salesOrderId', label: 'SALES ORDER', render: (value) => <button className="text-blue-600 hover:text-blue-800 hover:underline font-medium">{value}</button> },
-    { key: 'product', label: 'PRODUCT', render: (value) => <div><div className="font-medium text-gray-900">{value.split(' (')[0]}</div><div className="text-sm text-gray-500">({value.split('(')[1]?.replace(')', '')})</div></div> },
-    { key: 'blockedQty', label: 'BLOCKED QTY', render: (value) => <div className="font-medium text-center">{value.toLocaleString()}</div> },
-    { key: 'availableQty', label: 'AVAILABLE', render: (value) => <div className="text-center">{value.toLocaleString()}</div> },
-    { key: 'allocatedQty', label: 'ALLOCATED', render: (value) => <div className="text-center">{value.toLocaleString()}</div> },
-    { key: 'approver', label: 'APPROVER', render: (value) => <div className="text-sm"><div className="font-medium text-gray-900">{value.split(' - ')[0]}</div></div> },
+    { key: 'customer', label: 'CUSTOMER', sortable: true, render: (value) => <div className="text-sm text-gray-900">{value}</div> },
+    { key: 'enquiryId', label: 'ENQUIRY ID', sortable: true, render: (value) => <div className="text-sm text-gray-900">{value}</div> },
+    { key: 'allocatedSalesPerson', label: 'Sales Person', sortable: true, render: (value) => <div className="text-sm text-gray-900">{value}</div> },
     { key: 'expiry', label: 'EXPIRY DATE', render: (value) => <div className="text-sm font-medium">{value}</div> },
     { key: 'status', label: 'STATUS', render: (value) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(value)}`}>{value}</span> },
-    { key: 'actions', label: 'ACTIONS', render: (_, row) => <div className="flex space-x-2"><button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded" title="View Details" onClick={() => handleViewDetails(row)}><Eye className="h-4 w-4" /></button><button className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded" title="Release"><Unlock className="h-4 w-4" /></button></div> },
+    { key: 'actions', label: 'ACTIONS', render: (_, row) => <div className="flex space-x-2"><button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded" title="View Details" onClick={() => navigate(`/blocking/${row.id}`)}><Eye className="h-4 w-4" /></button><button className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded" title="Release" onClick={() => handleReleaseBlock(row.id)}><Unlock className="h-4 w-4" /></button></div> },
   ];
 
   return (
@@ -150,7 +136,7 @@ const InventoryBlockingList = () => {
           <p className="text-gray-600">Manage active blocks with links to originating sales orders.</p>
         </div>
         <div className="flex space-x-3">
-          {expiredBlocks.length > 0 && <button onClick={handleBulkReleaseExpired} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"><Clock className="w-4 h-4 mr-2" />Release All Expired ({expiredBlocks.length})</button>}
+          {/* Bulk release expired removed; only allow releasing selected blocks */}
           {selectedBlocks.length > 0 && <button onClick={handleBulkReleaseSelected} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"><UnlockKeyhole className="w-4 h-4 mr-2" />Release Selected ({selectedBlocks.length})</button>}
         </div>
       </div>
@@ -170,48 +156,7 @@ const InventoryBlockingList = () => {
 
       <DataTable columns={columns} data={filteredBlocks} selectable={true} selectedItems={selectedBlocks} onSelectionChange={setSelectedBlocks} itemKey="id" />
 
-      {/* View Details Modal */}
-      {viewModalOpen && selectedBlock && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-            <div className="mt-3">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">Block Details - {selectedBlock.id}</h3>
-                <button onClick={closeViewModal} className="text-gray-400 hover:text-gray-600"><svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4"><h4 className="text-md font-semibold text-gray-800 border-b pb-2">Block Information</h4><div className="space-y-3">
-                  <div><label className="text-sm font-medium text-gray-600">Block ID</label><p className="text-sm text-gray-900">{selectedBlock.id}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Sales Order ID</label><button onClick={() => navigate(`/sales-orders/${selectedBlock.salesOrderId}`)} className="text-sm text-blue-600 hover:text-blue-800 hover:underline">{selectedBlock.salesOrderId}</button></div>
-                  <div><label className="text-sm font-medium text-gray-600">Product</label><p className="text-sm text-gray-900">{selectedBlock.product}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Blocked Quantity</label><p className="text-sm text-gray-900 font-medium">{selectedBlock.blockedQty.toLocaleString()} {selectedBlock.unit}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Status</label><span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(selectedBlock.status)}`}>{selectedBlock.status}</span></div>
-                  <div><label className="text-sm font-medium text-gray-600">Warehouse Location</label><p className="text-sm text-gray-900">{selectedBlock.warehouse} - {selectedBlock.location}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Batch Number</label><p className="text-sm text-gray-900 font-mono">{selectedBlock.batchNumber}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Supplier Reference</label><p className="text-sm text-gray-900 font-mono">{selectedBlock.supplierRef}</p></div>
-                </div></div>
-                <div className="space-y-4"><h4 className="text-md font-semibold text-gray-800 border-b pb-2">Request Details</h4><div className="space-y-3">
-                  <div><label className="text-sm font-medium text-gray-600">Block Reason</label><p className="text-sm text-gray-900">{selectedBlock.reason}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Block Type</label><p className="text-sm text-gray-900">{selectedBlock.blockType}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Priority</label><span className={`text-sm font-medium ${getPriorityColor(selectedBlock.priority)}`}>{selectedBlock.priority}</span></div>
-                  <div><label className="text-sm font-medium text-gray-600">Requested By</label><p className="text-sm text-gray-900">{selectedBlock.requester}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Approved By</label><p className="text-sm text-gray-900">{selectedBlock.approver}</p></div>
-                </div></div>
-                <div className="md:col-span-2 space-y-4"><h4 className="text-md font-semibold text-gray-800 border-b pb-2">Timeline</h4><div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div><label className="text-sm font-medium text-gray-600">Created Date</label><p className="text-sm text-gray-900">{selectedBlock.createdDate}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Expiry Date</label><p className="text-sm text-gray-900">{selectedBlock.expiry}</p><p className="text-xs text-gray-500">{selectedBlock.expiryTime}</p></div>
-                  <div><label className="text-sm font-medium text-gray-600">Days to Expiry</label><p className={`text-sm font-medium ${selectedBlock.daysToExpiry <= 3 ? 'text-red-600' : selectedBlock.daysToExpiry <= 7 ? 'text-yellow-600' : 'text-green-600'}`}>{selectedBlock.daysToExpiry > 0 ? `${selectedBlock.daysToExpiry} days left` : `${Math.abs(selectedBlock.daysToExpiry)} days overdue`}</p></div>
-                </div></div>
-                <div className="md:col-span-2 space-y-4"><h4 className="text-md font-semibold text-gray-800 border-b pb-2">Additional Information</h4><div className="bg-gray-50 p-4 rounded-lg"><label className="text-sm font-medium text-gray-600 block mb-2">Block Notes</label><p className="text-sm text-gray-900">This inventory block was created due to {selectedBlock.reason.toLowerCase()}. The block is classified as {selectedBlock.blockType.toLowerCase()} type with {selectedBlock.priority.toLowerCase()} priority. Please contact the requester ({selectedBlock.requester}) or approver ({selectedBlock.approver.split(' - ')[0]}) for any questions.{selectedBlock.status === 'Expired' && ' This block has expired and should be reviewed for release.'}{selectedBlock.status === 'Active' && selectedBlock.daysToExpiry <= 3 && ' This block is approaching expiry and requires attention.'}</p></div></div>
-              </div>
-              <div className="flex justify-end space-x-3 mt-6 pt-4 border-t">
-                {(selectedBlock.status === 'Active' || selectedBlock.status === 'Expired') && <button onClick={() => { handleReleaseBlock(selectedBlock.id); closeViewModal(); }} className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"><Unlock className="w-4 h-4 mr-2" />Release Block</button>}
-                <button onClick={closeViewModal} className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Details are handled on a separate page now */}
     </div>
   );
 };

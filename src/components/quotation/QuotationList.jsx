@@ -70,7 +70,9 @@ const QuotationList = () => {
       label: 'Status',
       render: (value) => (
         <div className="space-y-1">
-          <StatusBadge status={value} />
+          <div className="flex items-center space-x-2">
+            <StatusBadge status={value} />
+          </div>
           <div className="text-xs text-gray-500 min-h-[20px] leading-snug">{/* reserved for notes under status */}</div>
         </div>
       )
@@ -95,13 +97,15 @@ const QuotationList = () => {
             >
               <Eye className="h-4 w-4" />
             </button>
-            <button
-              onClick={() => navigate(`/quotations/${row.id}`)}
-              className="p-1 text-green-600 hover:text-green-700"
-              title="Edit"
-            >
-              <Edit className="h-4 w-4" />
-            </button>
+            {row.status === 'Pending' && (
+              <button
+                onClick={() => navigate(`/quotations/${row.id}`)}
+                className="p-1 text-green-600 hover:text-green-700"
+                title="Edit"
+              >
+                <Edit className="h-4 w-4" />
+              </button>
+            )}
             <button
               onClick={() => setOpenMenuId(openMenuId === row.id ? null : row.id)}
               className="p-1 text-gray-600 hover:text-gray-800"

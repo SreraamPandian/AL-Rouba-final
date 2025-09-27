@@ -25,14 +25,12 @@ import SalesOrderForm from './components/orders/SalesOrderForm';
 
 import FPOList from './components/fpo/FPOList';
 import FPOForm from './components/fpo/FPOForm';
+import PurchaseOrderList from './components/purchase/PurchaseOrderList';
 
-import InwardReceipt from './components/inward/InwardReceipt';
-import IssuanceList from './components/issuance/IssuanceList';
-import IssuanceDetail from './components/issuance/IssuanceDetail';
-import InvoiceList from './components/invoice/InvoiceList';
-import InvoiceForm from './components/invoice/InvoiceForm';
+// inward/issuance/invoice modules removed per user request
 
 import InventoryBlockingList from './components/inventory/InventoryBlockingList';
+import InventoryBlockDetails from './components/inventory/InventoryBlockDetails';
 import TermsAndConditions from './components/settings/TermsAndConditions';
 
 import AuditTrail from './components/audit/AuditTrail';
@@ -42,7 +40,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { ReceivedOrdersProvider } from './context/ReceivedOrdersContext';
 import { SalesOrdersProvider } from './context/SalesOrdersContext';
-import { InvoicesProvider } from './context/InvoicesContext';
 import { BudgetProvider } from './context/BudgetContext';
 import NotFoundPage from './components/system/NotFoundPage';
 
@@ -84,19 +81,16 @@ function AppRoutes() {
         <Route path="/sales-orders/:id" element={<SalesOrderForm />} />
 
         <Route path="/blocking" element={<InventoryBlockingList />} />
+        <Route path="/blocking/:id" element={<InventoryBlockDetails />} />
+
+        <Route path="/purchase-orders" element={<PurchaseOrderList />} />
+        <Route path="/purchase-orders/new" element={<PurchaseOrderList />} />
 
         <Route path="/fpo" element={<FPOList />} />
         <Route path="/fpo/new" element={<FPOForm />} />
         <Route path="/fpo/:id" element={<FPOForm />} />
 
-        <Route path="/inward" element={<InwardReceipt />} />
-
-        <Route path="/issuance" element={<IssuanceList />} />
-        <Route path="/issuance/:id" element={<IssuanceDetail />} />
-
-        <Route path="/invoices" element={<InvoiceList />} />
-        <Route path="/invoices/new" element={<InvoiceForm />} />
-        <Route path="/invoices/:id" element={<InvoiceForm />} />
+        {/* Inward / Issuance / Invoices removed */}
 
         <Route path="/terms" element={<TermsAndConditions />} />
         <Route path="/audit-trail" element={<AuditTrail />} />
@@ -114,13 +108,11 @@ function App() {
       <NotificationProvider>
         <ReceivedOrdersProvider>
           <SalesOrdersProvider>
-            <InvoicesProvider>
-              <BudgetProvider>
-                <Router>
-                  <AppRoutes />
-                </Router>
-              </BudgetProvider>
-            </InvoicesProvider>
+            <BudgetProvider>
+              <Router>
+                <AppRoutes />
+              </Router>
+            </BudgetProvider>
           </SalesOrdersProvider>
         </ReceivedOrdersProvider>
       </NotificationProvider>

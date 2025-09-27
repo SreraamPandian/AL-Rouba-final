@@ -28,7 +28,7 @@ export const mockBudgetsData = Array.from({ length: 25 }, (_, index) => {
       deliveryDays: faker.helpers.arrayElement(['7 Days', '14 Days', '21 Days', '30 Days', '45 Days', '60 Days', '90 Days']),
       licensesOffering: faker.helpers.arrayElement(['Standard', 'Premium', 'Enterprise', 'Professional', 'Basic', 'Custom']),
       paymentTerm: faker.helpers.arrayElement(['Advance', 'Credit', 'COD', 'L/C', 'Net Banking', 'Cheque']),
-      currency: faker.helpers.arrayElement(['OMR', 'USD', 'AED', 'EUR', 'GBP', 'INR']),
+      currency: faker.helpers.arrayElement(['OMR', 'USD', 'AED', 'EUR', 'GBP']),
       shipping: faker.helpers.arrayElement(['FOB', 'CIF', 'CFR', 'EXW', 'DDP', 'DDU', 'FAS']),
       notes: 'Standard Terms and Conditions Apply.',
       products: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => ({

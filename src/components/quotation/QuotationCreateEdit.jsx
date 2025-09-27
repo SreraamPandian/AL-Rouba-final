@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { 
-  ArrowLeft, Plus, Trash2, Download, 
+import {
+  ArrowLeft, Plus, Trash2, Download,
   Save, Send, FileText, GitBranch, Clock
 } from 'lucide-react';
 import StatusBadge from '../ui/StatusBadge';
@@ -107,7 +107,6 @@ const QuotationCreateEdit = () => {
           <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"><Save className="h-4 w-4 mr-2" />Save Draft</button>
           <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"><Send className="h-4 w-4 mr-2" />Send to Customer</button>
           <button onClick={createRevision} className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"><GitBranch className="h-4 w-4 mr-2" />Create Revision</button>
-          <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"><Download className="h-4 w-4 mr-2" />Download PDF</button>
         </div>
       </div>
 
@@ -187,7 +186,7 @@ const QuotationCreateEdit = () => {
               ))}
             </ul>
           </div>
-          
+
           <TimelinePanel title="Quotation History" timeline={timeline} />
         </div>
       </div>

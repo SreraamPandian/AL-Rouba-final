@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { ArrowLeft, Save, Send, Download, Plus, Trash2, Truck, Calendar, User, Building, MapPin } from 'lucide-react';
+import { ArrowLeft, Save, Send, Plus, Trash2, Truck, Calendar, User, Building, MapPin } from 'lucide-react';
 import StatusBadge from '../ui/StatusBadge';
 import { useAuth } from '../../context/AuthContext';
 import { faker } from '@faker-js/faker';
@@ -33,12 +33,11 @@ const FPOForm = () => {
     ];
 
     const createdDate = faker.date.recent({ days: 15 });
-    const expectedDelivery = new Date(createdDate);
-    expectedDelivery.setDate(expectedDelivery.getDate() + faker.number.int({ min: 7, max: 30 }));
 
     return {
       id: fpoId || `FPO-2024-${String(faker.number.int({ min: 1, max: 150 })).padStart(3, '0')}`,
       salesOrderId: 'SO-2024-021',
+      customerName: 'Default Customer',
       status: faker.helpers.arrayElement(['Draft', 'Submitted', 'Approved', 'Vendor Confirmed', 'In Transit', 'Delivered']),
       vendor: faker.helpers.arrayElement(vendors),
       vendorContact: faker.person.fullName(),
@@ -49,17 +48,20 @@ const FPOForm = () => {
       createdBy: faker.person.fullName(),
       approvedBy: user?.role === 'Sales Manager' ? user.name : 'Sarah Johnson - Sales Manager',
       approvedDate: faker.date.recent({ days: 10 }).toLocaleDateString(),
-      expectedDelivery: expectedDelivery.toLocaleDateString(),
+      // expectedDelivery removed per UI specification
       shippingAddress: `AL Rouba Warehouse\n123 Industrial Avenue\nMetro City, State 12345\nCountry`,
       billingAddress: `AL Rouba Enterprises\n456 Business District\nMetro City, State 12345\nCountry`,
-      paymentTerms: faker.helpers.arrayElement(['Net 30', 'Net 60', '50% Advance, 50% on Delivery', 'LC at Sight']),
-      currency: faker.helpers.arrayElement(['USD', 'EUR', 'INR']),
+      // paymentTerms removed per UI specification
+      // currency fixed to OMR per request
+      currency: 'OMR',
       taxRate: faker.number.float({ min: 5, max: 18, multipleOf: 0.5 }),
       notes: 'Material should meet industry standards. Delivery to be coordinated with warehouse team.',
       items: Array.from({ length: faker.number.int({ min: 2, max: 5 }) }, (_, index) => {
         const product = faker.helpers.arrayElement(products);
         const quantity = faker.number.int({ min: 10, max: 500 });
         const rate = faker.number.float({ min: 15, max: 250, multipleOf: 0.01 });
+        const itemDelivery = new Date(createdDate);
+        itemDelivery.setDate(itemDelivery.getDate() + faker.number.int({ min: 7, max: 30 }));
         return {
           id: index + 1,
           product: product.name,
@@ -68,9 +70,9 @@ const FPOForm = () => {
           quantity,
           unit: product.unit,
           vendorRate: rate,
-          currency: 'USD',
+          currency: 'OMR',
           total: quantity * rate,
-          deliveryDate: expectedDelivery.toLocaleDateString(),
+          deliveryDate: itemDelivery.toLocaleDateString(),
           specifications: faker.helpers.arrayElement([
             'Grade A quality, ISI certified',
             'Standard industry specifications',
@@ -91,6 +93,7 @@ const FPOForm = () => {
       return {
         id: 'DRAFT',
         salesOrderId: salesOrderItem?.salesOrderId || 'SO-2024-021',
+        customerName: salesOrderItem?.customerName || '',
         status: 'Draft',
         vendor: '',
         vendorContact: '',
@@ -99,11 +102,11 @@ const FPOForm = () => {
         // salesOrderId will be chosen in Order Details section for new FPO
         createdDate: new Date().toLocaleDateString(),
         createdBy: user?.name || 'Current User',
-        expectedDelivery: '',
+        // expectedDelivery removed per UI spec
         shippingAddress: 'AL Rouba Warehouse\n123 Industrial Avenue\nMetro City, State 12345\nCountry',
         billingAddress: 'AL Rouba Enterprises\n456 Business District\nMetro City, State 12345\nCountry',
-        paymentTerms: 'Net 30',
-        currency: 'USD',
+        // paymentTerms removed per UI spec
+        currency: 'OMR',
         taxRate: 10,
         notes: '',
         items: salesOrderItems && salesOrderItems.length ? salesOrderItems.map((it, idx) => ({
@@ -113,8 +116,9 @@ const FPOForm = () => {
           quantity: it.requestedQty,
           unit: 'PCS',
           vendorRate: 0,
-          currency: 'USD',
+          currency: 'OMR',
           total: 0,
+          deliveryDate: new Date().toLocaleDateString(),
           specifications: ''
         })) : (salesOrderItem ? [{
           id: 1,
@@ -123,8 +127,9 @@ const FPOForm = () => {
           quantity: salesOrderItem.requestedQty,
           unit: 'PCS',
           vendorRate: 0,
-          currency: 'USD',
+          currency: 'OMR',
           total: 0,
+          deliveryDate: new Date().toLocaleDateString(),
           specifications: ''
         }] : [])
       };
@@ -148,13 +153,15 @@ const FPOForm = () => {
         quantity: it.requestedQty || it.allocatedQty || 0,
         unit: 'PCS',
         vendorRate: 0,
-        currency: 'USD',
+        currency: 'OMR',
         total: 0,
+        deliveryDate: new Date().toLocaleDateString(),
         specifications: ''
       }));
       setFpo(prev => ({
         ...prev,
         salesOrderId: soId,
+        customerName: prev.customerName || so.customer || so.customerName || '',
         vendor: prev.vendor || faker.company.name(),
         vendorContact: prev.vendorContact || faker.person.fullName(),
         vendorEmail: prev.vendorEmail || faker.internet.email(),
@@ -165,12 +172,13 @@ const FPOForm = () => {
     }
     // Fallback dummy if SO not found
     const dummyItems = [
-      { id: 1, product: 'Generic Component A', productCode: 'GEN-A', quantity: 50, unit: 'PCS', vendorRate: 0, currency: 'USD', total: 0, specifications: '' },
-      { id: 2, product: 'Generic Component B', productCode: 'GEN-B', quantity: 120, unit: 'PCS', vendorRate: 0, currency: 'USD', total: 0, specifications: '' }
+      { id: 1, product: 'Generic Component A', productCode: 'GEN-A', quantity: 50, unit: 'PCS', vendorRate: 0, currency: 'OMR', total: 0, deliveryDate: new Date().toLocaleDateString(), specifications: '' },
+      { id: 2, product: 'Generic Component B', productCode: 'GEN-B', quantity: 120, unit: 'PCS', vendorRate: 0, currency: 'OMR', total: 0, deliveryDate: new Date().toLocaleDateString(), specifications: '' }
     ];
     setFpo(prev => ({
       ...prev,
       salesOrderId: soId,
+      customerName: prev.customerName || '',
       vendor: prev.vendor || faker.company.name(),
       vendorContact: prev.vendorContact || faker.person.fullName(),
       vendorEmail: prev.vendorEmail || faker.internet.email(),
@@ -321,9 +329,7 @@ const FPOForm = () => {
               <Truck className="h-4 w-4 mr-2" />Track Shipment
             </button>
           )}
-          <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
-            <Download className="h-4 w-4 mr-2" />Download PDF
-          </button>
+          {/* Download PDF removed per request */}
         </div>
       </div>
 
@@ -384,7 +390,7 @@ const FPOForm = () => {
             Order Details
           </h2>
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Sales Order</label>
                 <input
@@ -402,45 +408,19 @@ const FPOForm = () => {
                 />
                 <datalist id="salesOrderOptions">
                   {salesOrders.map(so => (
-                    <option key={so.id} value={so.id}>{so.id} - {so.customer}</option>
+                    <option key={so.id} value={so.id}>{so.id}</option>
                   ))}
                 </datalist>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Expected Delivery</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
                 <input
-                  type="date"
-                  value={fpo.expectedDelivery}
-                  onChange={e => handleInputChange('expectedDelivery', e.target.value)}
+                  type="text"
+                  value={fpo.customerName}
+                  onChange={e => handleInputChange('customerName', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Customer name (prefilled from Sales Order, editable)"
                 />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Payment Terms</label>
-                <select
-                  value={fpo.paymentTerms}
-                  onChange={e => handleInputChange('paymentTerms', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="Net 30">Net 30</option>
-                  <option value="Net 60">Net 60</option>
-                  <option value="50% Advance, 50% on Delivery">50% Advance, 50% on Delivery</option>
-                  <option value="LC at Sight">LC at Sight</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
-                <select
-                  value={fpo.currency}
-                  onChange={e => handleInputChange('currency', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="USD">USD</option>
-                  <option value="EUR">EUR</option>
-                  <option value="INR">INR</option>
-                </select>
               </div>
             </div>
             {fpo.approvedBy && (

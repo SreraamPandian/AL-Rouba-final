@@ -326,7 +326,9 @@ const BudgetList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{budget.quoteSentStatus === 'YES' && budget.quoteSentDate ? new Date(budget.quoteSentDate).toLocaleDateString() : '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <div className="space-y-1">
-                      {getStatusBadge(budget.status)}
+                      <div className="flex items-center space-x-2">
+                        {getStatusBadge(budget.status)}
+                      </div>
                       <div className="text-xs text-gray-500 min-h-[20px] leading-snug">
                         {(budget.notes || budget.budgetDetails?.notes || '').slice(0, 60)}
                       </div>
@@ -336,7 +338,7 @@ const BudgetList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 relative">
                     <div className="flex items-center space-x-2">
                       <button onClick={() => navigate(getNavigateUrl(budget, 'view'))} className="text-gray-400 hover:text-blue-600" title="View"><Eye className="h-4 w-4" /></button>
-                      {budget.status !== 'Won' && (
+                      {budget.status === 'Pending' && (
                         <button onClick={() => navigate(getNavigateUrl(budget, 'edit'))} className="text-gray-400 hover:text-green-600" title="Edit"><Edit className="h-4 w-4" /></button>
                       )}
                       <button onClick={() => setOpenMenuId(openMenuId === budget.budgetId ? null : budget.budgetId)} className="text-gray-400 hover:text-gray-600" title="More options"><MoreHorizontal className="h-4 w-4" /></button>

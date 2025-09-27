@@ -93,10 +93,7 @@ const EnquiryDetail = () => {
                         <FileText className="h-4 w-4 mr-2" />
                         Create Quote
                     </button>
-                    <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
-                        <Download className="h-4 w-4 mr-2" />
-                        Download PDF
-                    </button>
+                    {/* Download PDF removed per request */}
                     <button
                         onClick={() => navigate(`/enquiries/${enquiry.id}/edit`)}
                         className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
