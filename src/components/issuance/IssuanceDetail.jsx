@@ -64,7 +64,7 @@ const IssuanceDetail = () => {
   const issuance = {
     id,
     salesOrderId: 'SO-2024-018',
-    sourceFpoId: 'FPO-2024-009',
+    sourceFpoId: 'CONS-2024-009',
     sourceInwardId: 'INW-2024-012',
     customer: 'Industrial Ltd',
     issuedBy: 'Mike Wilson (Storekeeper)',
@@ -93,7 +93,7 @@ const IssuanceDetail = () => {
               <span>From Inward:
                 <button className="text-blue-600 hover:underline ml-1">{issuance.sourceInwardId}</button>
               </span>
-              <span>Source FPO:
+              <span>Source Consignment:
                 <button className="text-blue-600 hover:underline ml-1">{issuance.sourceFpoId}</button>
               </span>
             </div>

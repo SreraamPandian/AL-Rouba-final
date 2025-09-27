@@ -13,7 +13,8 @@ const FPOForm = () => {
   const { user } = useAuth();
   const { salesOrders } = useSalesOrders();
   const salesOrderItem = location.state?.salesOrderItem;
-  const salesOrderItems = location.state?.salesOrderItems; // optional array from multi-select
+  // If multiple items are passed via state, only use the first one for the new FPO flow
+  const salesOrderItems = Array.isArray(location.state?.salesOrderItems) && location.state?.salesOrderItems.length > 0 ? [location.state?.salesOrderItems[0]] : null;
   const isEdit = !!id || id === 'FPO-2024-001';
   const isManager = user?.role === 'Sales Manager';
 
@@ -249,15 +250,10 @@ const FPOForm = () => {
     alert('FPO has been approved.');
   };
 
-  // Sales Executive quick-approve (for new FPO page) - single approve button at the end
+  // Sales Executive quick-approve removed from New FPO per request — approvals happen on FPO order pages
   const execApproveFPO = () => {
-    // only allow if user is sales exec (not manager) and in create mode (id not present)
-    if (user?.role === 'Sales Manager') {
-      alert('Managers should use the manager approval flow.');
-      return;
-    }
-    setFpo(prev => ({ ...prev, status: 'Approved', approvedBy: user?.name || 'Sales Exec', approvedDate: new Date().toLocaleDateString() }));
-    alert('FPO approved by Sales Executive.');
+    // kept for compatibility but not exposed in New FPO UI
+    console.warn('execApproveFPO called but UI should not show this on New FPO');
   };
 
   const rejectFPO = () => {
@@ -283,7 +279,11 @@ const FPOForm = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <button onClick={() => navigate(-1)} className="p-2 hover:bg-gray-100 rounded-lg">
+          <button onClick={() => {
+            const ref = location.state?.from;
+            if (ref) return navigate(ref);
+            try { navigate(-1); } catch (e) { navigate('/fpo'); }
+          }} className="p-2 hover:bg-gray-100 rounded-lg">
             <ArrowLeft className="h-5 w-5" />
           </button>
           <div>
@@ -316,7 +316,7 @@ const FPOForm = () => {
               </button>
             </>
           )}
-          {isManager && fpo.status === 'Submitted' && (
+          {isManager && (fpo.status === 'Submitted' || location.state?.allowApproveInline) && (
             <button
               onClick={approveFPO}
               className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -324,11 +324,7 @@ const FPOForm = () => {
               <Send className="h-4 w-4 mr-2" />Approve FPO
             </button>
           )}
-          {fpo.status === 'Approved' && (
-            <button className="flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-              <Truck className="h-4 w-4 mr-2" />Track Shipment
-            </button>
-          )}
+          {/* Track Shipment removed per request to eliminate FPO shipment tracking UI */}
           {/* Download PDF removed per request */}
         </div>
       </div>
@@ -633,15 +629,10 @@ const FPOForm = () => {
       </div>
       {/* Footer Actions: Exec approve on new FPO, Manager approve/reject on edit view */}
       <div className="flex items-center justify-end space-x-3">
-        {/* Sales Executive - single approve button on new FPO page */}
-        {!isEdit && user?.role !== 'Sales Manager' && (
-          <button onClick={execApproveFPO} className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-            <Send className="h-4 w-4 mr-2" />Approve
-          </button>
-        )}
+        {/* Sales Executive quick-approve removed from New FPO UI. Approvals are available on existing FPO (isEdit) pages. */}
 
-        {/* Sales Manager - Approve and Reject when viewing an existing FPO */}
-        {isEdit && isManager && (
+        {/* Sales Manager - Approve and Reject (available to managers on new or existing FPO pages) */}
+        {isManager && (
           <>
             <button onClick={approveFPO} className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
               <Send className="h-4 w-4 mr-2" />Approve

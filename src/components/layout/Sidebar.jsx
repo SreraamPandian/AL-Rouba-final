@@ -22,13 +22,14 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: 'Budget and Quote', href: '/budgets', icon: Calculator, color: 'text-gray-500' },
     { name: 'Received Orders', href: '/received-orders', icon: ShoppingCart, color: 'text-gray-500' },
     { name: 'Sales Orders', href: '/sales-orders', icon: Package, color: 'text-gray-500' },
+    { name: 'FPO', href: '/fpo', icon: Truck, color: 'text-gray-500' },
     {
       name: 'Purchase Order',
       icon: ShoppingCart,
       color: 'text-gray-500',
       children: [
         { name: 'Create Purchase Order', href: '/purchase-orders/new', icon: Receipt, color: 'text-gray-500' },
-        { name: 'Check In Process', href: '/purchase-orders/check-in', icon: ArrowDownCircle, color: 'text-gray-500' }
+        { name: 'Check In Process', href: '/check-in-process', icon: ArrowDownCircle, color: 'text-gray-500' }
       ]
     },
     {
@@ -36,14 +37,13 @@ const Sidebar = ({ isOpen, onClose }) => {
       icon: Package,
       color: 'text-gray-500',
       children: [
-        { name: 'Order Management', href: '/sales-orders/manage', icon: FileText, color: 'text-gray-500' },
-        { name: 'Confirm Order', href: '/sales-orders/confirm', icon: ArrowUpCircle, color: 'text-gray-500' },
-        { name: 'Invoice', href: '/sales-orders/invoice', icon: ArrowDownCircle, color: 'text-gray-500' }
+        { name: 'Order Management', href: '/order-management', icon: FileText, color: 'text-gray-500' },
+        { name: 'Confirm Order', href: '/confirm-orders', icon: ArrowUpCircle, color: 'text-gray-500' },
+        { name: 'Invoice', href: '/invoices', icon: ArrowDownCircle, color: 'text-gray-500' }
       ]
     },
     { name: 'Inventory Blocking', href: '/blocking', icon: Lock, color: 'text-gray-500' },
-    { name: 'FPO', href: '/fpo', icon: Truck, color: 'text-gray-500' },
-    { name: 'Inventory Management', href: '/inventory', icon: Package, color: 'text-gray-500' },
+    { name: 'Inventory Management', href: '/inventory-management', icon: Package, color: 'text-gray-500' },
     {
       name: 'Master',
       icon: Archive,
@@ -56,7 +56,7 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const filteredItems = navigationItems.filter(item => {
     if (user?.role === 'Storekeeper') {
-      return ['Dashboard', 'FPO', 'Inward', 'Issuance', 'Master'].includes(item.name);
+      return ['Dashboard', 'Inward', 'Issuance', 'Master'].includes(item.name);
     }
     return true;
   });

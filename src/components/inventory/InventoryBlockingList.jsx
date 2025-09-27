@@ -118,13 +118,28 @@ const InventoryBlockingList = () => {
   };
 
   const columns = [
-    { key: 'salesOrderId', label: 'SALES ORDER', render: (value) => <button className="text-blue-600 hover:text-blue-800 hover:underline font-medium">{value}</button> },
+    { key: 'salesOrderId', label: 'SALES ORDER', render: (value, row) => <button onClick={(e) => { e.stopPropagation(); navigate(`/sales-orders/${row.salesOrderId}`); }} className="text-blue-600 hover:text-blue-800 hover:underline font-medium">{value}</button> },
     { key: 'customer', label: 'CUSTOMER', sortable: true, render: (value) => <div className="text-sm text-gray-900">{value}</div> },
     { key: 'enquiryId', label: 'ENQUIRY ID', sortable: true, render: (value) => <div className="text-sm text-gray-900">{value}</div> },
     { key: 'allocatedSalesPerson', label: 'Sales Person', sortable: true, render: (value) => <div className="text-sm text-gray-900">{value}</div> },
     { key: 'expiry', label: 'EXPIRY DATE', render: (value) => <div className="text-sm font-medium">{value}</div> },
     { key: 'status', label: 'STATUS', render: (value) => <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(value)}`}>{value}</span> },
-    { key: 'actions', label: 'ACTIONS', render: (_, row) => <div className="flex space-x-2"><button className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded" title="View Details" onClick={() => navigate(`/blocking/${row.id}`)}><Eye className="h-4 w-4" /></button><button className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded" title="Release" onClick={() => handleReleaseBlock(row.id)}><Unlock className="h-4 w-4" /></button></div> },
+    {
+      key: 'actions', label: 'ACTIONS', render: (_, row) => (
+        <div className="flex space-x-2">
+          <button
+            className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded"
+            title="View Details"
+            onClick={(e) => { e.stopPropagation(); navigate(`/blocking/${row.id}`); }}
+          >
+            <Eye className="h-4 w-4" />
+          </button>
+          <button className="p-1.5 text-green-600 hover:text-green-800 hover:bg-green-50 rounded" title="Release" onClick={(e) => { e.stopPropagation(); handleReleaseBlock(row.id); }}>
+            <Unlock className="h-4 w-4" />
+          </button>
+        </div>
+      )
+    },
   ];
 
   return (

@@ -22,8 +22,8 @@ export const NotificationProvider = ({ children }) => {
     },
     {
       id: 2,
-      title: 'FPO Delivered',
-      message: 'FPO F-2024-003 has been delivered to warehouse',
+      title: 'Delivery Notice',
+      message: 'Consignment C-2024-003 has been delivered to warehouse',
       type: 'delivery',
       time: '1 hour ago',
       read: false
@@ -39,8 +39,8 @@ export const NotificationProvider = ({ children }) => {
   ]);
 
   const markAsRead = (id) => {
-    setNotifications(prev => 
-      prev.map(notif => 
+    setNotifications(prev =>
+      prev.map(notif =>
         notif.id === id ? { ...notif, read: true } : notif
       )
     );

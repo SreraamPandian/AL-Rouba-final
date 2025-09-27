@@ -1,4 +1,7 @@
 import React, { useState, useMemo } from 'react';
+import { ArrowLeft, Plus, Trash2, Download, FileText, Package2, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import ChildPartMappingModal from './ChildPartMappingModal';
 import { Truck, CheckCircle, Plus, Upload, Save, Map, FileText, AlertTriangle, Trash2, ArrowLeft } from 'lucide-react';
 import ChildPartMappingModal from './ChildPartMappingModal';
 import StatusBadge from '../ui/StatusBadge';
@@ -6,7 +9,7 @@ import StatusBadge from '../ui/StatusBadge';
 // Mock data for the dashboard part
 const incomingConsignments = [
   {
-    id: 'FPO-2024-008',
+    id: 'CONS-2024-008',
     vendor: 'Global Electronics',
     eta: 'Today',
     status: 'In Transit',
@@ -14,7 +17,7 @@ const incomingConsignments = [
     receivedQty: 0,
   },
   {
-    id: 'FPO-2024-009',
+    id: 'CONS-2024-009',
     vendor: 'Component Solutions',
     eta: 'Tomorrow',
     status: 'Awaiting Receipt',
@@ -22,7 +25,7 @@ const incomingConsignments = [
     receivedQty: 0,
   },
   {
-    id: 'FPO-2024-011',
+    id: 'CONS-2024-011',
     vendor: 'Advanced Parts Co.',
     eta: 'Yesterday',
     status: 'Partially Received',
@@ -32,14 +35,14 @@ const incomingConsignments = [
 ];
 
 const fpoItemsData = {
-  'FPO-2024-008': [
+  'CONS-2024-008': [
     { id: 1, product: 'Motherboard Assembly', code: 'MB-ASM-01', expectedQty: 20, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: true },
     { id: 2, product: 'Power Supply Unit', code: 'PSU-004', expectedQty: 20, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: false },
   ],
-  'FPO-2024-009': [
+  'CONS-2024-009': [
     { id: 3, product: 'Casing Kit', code: 'CS-KIT-02', expectedQty: 50, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: true },
   ],
-  'FPO-2024-011': [
+  'CONS-2024-011': [
     { id: 4, product: 'Industrial Sensor', code: 'SEN-IND-01', expectedQty: 100, receivedQty: 60, batchNo: 'B-IS-0410', packagingDetails: 'Box of 100', status: 'Partial', hasChildParts: false },
   ]
 };

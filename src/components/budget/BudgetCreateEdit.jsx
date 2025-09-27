@@ -222,7 +222,13 @@ const BudgetCreateEdit = () => {
       };
       addBudget(newBudget);
       alert(`New budget ${newId} created and submitted for approval.`);
-      navigate('/budgets');
+      // If user is on step 2 of the Add New Budget flow, open the approval screen for review in Sales Executive module
+      if (currentStep === 2) {
+        // navigate to approval and indicate the originating page so the approval screen's Back button can return correctly
+        navigate(`/budget/${encodeURIComponent(newId)}/approve`, { state: { from: '/sales-executive' } });
+      } else {
+        navigate('/budgets');
+      }
     }
   };
 

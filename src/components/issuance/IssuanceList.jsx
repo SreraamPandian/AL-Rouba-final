@@ -11,7 +11,7 @@ const IssuanceList = () => {
   const issuances = Array.from({ length: 15 }, (_, index) => ({
     id: `ISS-2024-${String(index + 1).padStart(4, '0')}`,
     salesOrderId: `SO-2024-${String(faker.number.int({ min: 1, max: 22 })).padStart(3, '0')}`,
-    source: `FPO-${String(faker.number.int({ min: 1, max: 10 })).padStart(3, '0')}`,
+    source: `CONS-${String(faker.number.int({ min: 1, max: 10 })).padStart(3, '0')}`,
     customer: faker.company.name(),
     status: faker.helpers.arrayElement(['Issued', 'Partial', 'Pending']),
     issuedBy: faker.person.fullName(),

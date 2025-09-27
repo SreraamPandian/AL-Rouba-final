@@ -164,7 +164,7 @@ const InventoryBlockDetails = () => {
 
             <div className="mt-6 bg-white rounded-lg shadow p-6">
                 <h3 className="font-semibold mb-2">Customer Details</h3>
-                <p className="text-sm text-gray-700">{block.customer} — {faker.address.city()}, {faker.address.country()}</p>
+                <p className="text-sm text-gray-700">{block.customer} — {faker.location.city()}, {faker.location.country()}</p>
                 <p className="text-sm text-gray-600 mt-2">{block.notes}</p>
             </div>
         </div>

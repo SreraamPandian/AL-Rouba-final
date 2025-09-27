@@ -19,9 +19,9 @@ const FPOList = () => {
 
   const columns = [
     {
-      key: 'id',
-      label: 'FPO No.',
-      render: (value, row) => <button onClick={() => navigate(`/fpo/${row.id}`)} className="text-blue-600 hover:text-blue-800 font-medium">{value}</button>,
+      key: 'salesOrderId',
+      label: 'Sales Order No.',
+      render: (value, row) => <button onClick={() => navigate(`/fpo/${row.id}`)} className="text-blue-600 hover:text-blue-800 font-medium">{value || row.salesOrderId}</button>,
     },
     { key: 'vendor', label: 'Vendor' },
     { key: 'salesOrderId', label: 'Linked Sales Order' },
@@ -33,7 +33,7 @@ const FPOList = () => {
       label: 'Actions',
       render: (_, row) => (
         <div className="flex space-x-2">
-          <button onClick={() => navigate(`/fpo/${row.id}`)} className="p-1 text-blue-600" title="View"><Eye className="h-4 w-4" /></button>
+          <button onClick={() => navigate(`/fpo/${row.id}`, { state: { from: '/fpo-list', allowApproveInline: true } })} className="p-1 text-blue-600" title="View"><Eye className="h-4 w-4" /></button>
           <button onClick={() => navigate(`/fpo/${row.id}`)} className="p-1 text-gray-600" title="Edit"><Edit className="h-4 w-4" /></button>
           {/* Removed truck/track action per request */}
         </div>
@@ -45,7 +45,7 @@ const FPOList = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Forward Purchase Orders (FPO)</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Foreign Purchase Orders (FPO)</h1>
           <p className="text-gray-600">Manage procurement from vendors for backorders.</p>
         </div>
         <button

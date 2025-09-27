@@ -22,32 +22,8 @@ export const getBudgetApprovals = (budgets) => {
         }));
 };
 
-// FPO Approvals
-export const getFPOApprovals = () => {
-    return Array.from({ length: 5 }, (_, index) => {
-        const fpoId = `FPO-2024-${String(index + 1).padStart(3, '0')}`;
-        const vendor = faker.company.name();
-        const value = faker.number.float({ min: 5000, max: 50000, fractionDigits: 2 });
-
-        return {
-            id: fpoId,
-            type: 'FPO',
-            title: `Forward Purchase Order ${fpoId}`,
-            description: `${vendor} • $${value.toFixed(2)}`,
-            submittedBy: faker.helpers.arrayElement(['John Smith', 'Sarah Wilson', 'Mike Johnson']),
-            submittedDate: faker.date.recent({ days: 5 }).toISOString().split('T')[0],
-            priority: faker.helpers.arrayElement(['High', 'Medium', 'Low']),
-            category: 'Procurement',
-            details: {
-                vendor: vendor,
-                value: value,
-                currency: 'USD',
-                salesOrderId: `SO-2024-${String(faker.number.int({ min: 1, max: 22 })).padStart(3, '0')}`,
-                eta: faker.date.future({ years: 0.2 }).toISOString().split('T')[0]
-            }
-        };
-    });
-};
+// FPO Approvals generation removed - FPO module deprecated in this build
+// export const getFPOApprovals = () => { /* removed */ };
 
 // Inventory Block Approvals
 export const getInventoryBlockApprovals = () => {
@@ -144,14 +120,14 @@ export const getQuotationApprovals = () => {
 // Combine all approvals
 export const getAllPendingApprovals = (budgets = []) => {
     const budgetApprovals = getBudgetApprovals(budgets);
-    const fpoApprovals = getFPOApprovals();
+    // const fpoApprovals = getFPOApprovals();
     const inventoryApprovals = getInventoryBlockApprovals();
     const salesOrderApprovals = getSalesOrderApprovals();
     const quotationApprovals = getQuotationApprovals();
 
     return [
         ...budgetApprovals,
-        ...fpoApprovals,
+        // ...fpoApprovals,
         ...inventoryApprovals,
         ...salesOrderApprovals,
         ...quotationApprovals

@@ -642,7 +642,7 @@ const SalesOrderForm = () => {
                               <button
                                 type="button"
                                 className="px-3 py-1 text-orange-700 border border-orange-400 rounded-md hover:bg-orange-50 text-xs"
-                                onClick={() => navigate('/fpo/new', { state: { salesOrderItem: { product: item.description, code: item.partNumber, requestedQty: item.requiredQty } } })}
+                                onClick={() => navigate('/fpo/new', { state: { salesOrderItem: item } })}
                               >
                                 FPO
                               </button>
@@ -703,25 +703,7 @@ const SalesOrderForm = () => {
                     >
                       Block Selected
                     </button>
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
-                      onClick={() => {
-                        const selected = allocations.filter(a => selectedRows.includes(a.id));
-                        if (selected.length > 0) {
-                          navigate('/fpo/new', {
-                            state: {
-                              salesOrderItems: selected.map(it => ({ product: it.description, code: it.partNumber, requestedQty: it.requiredQty }))
-                            }
-                          });
-                        } else if (allocations.length) {
-                          const it = allocations[0];
-                          navigate('/fpo/new', { state: { salesOrderItem: { product: it.description, code: it.partNumber, requestedQty: it.requiredQty } } });
-                        }
-                      }}
-                    >
-                      FPO for Selected
-                    </button>
+                    {/* FPO for Selected removed - creation of FPO from multiple selected items disabled per new UX */}
                   </>
                 )}
               </div>

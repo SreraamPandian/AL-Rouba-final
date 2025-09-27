@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, X } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 import { useBudgets } from '../../context/BudgetContext';
 import StatusBadge from '../ui/StatusBadge';
 import ApprovalActionModal from './ApprovalActionModal';
@@ -8,6 +9,7 @@ import ApprovalActionModal from './ApprovalActionModal';
 const BudgetApproval = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const decodedId = decodeURIComponent(id);
     const { findBudget, updateBudget } = useBudgets();
     const budget = findBudget(decodedId);
@@ -102,7 +104,12 @@ const BudgetApproval = () => {
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                        <button onClick={() => navigate('/budgets')} className="p-2 hover:bg-gray-100 rounded-lg">
+                        <button onClick={() => {
+                            // prefer explicit referrer from navigation state, then fall back to browser history, then budgets list
+                            const ref = location.state?.from;
+                            if (ref) return navigate(ref);
+                            try { navigate(-1); } catch (e) { navigate('/budgets'); }
+                        }} className="p-2 hover:bg-gray-100 rounded-lg">
                             <ArrowLeft className="h-5 w-5" />
                         </button>
                         <div>

@@ -23,6 +23,15 @@ import ReceivedOrderForm from './components/orders/ReceivedOrderForm';
 import SalesOrderList from './components/orders/SalesOrderList';
 import SalesOrderForm from './components/orders/SalesOrderForm';
 
+// FPO module removed
+// import FPOList from './components/fpo/FPOList';
+// import FPOForm from './components/fpo/FPOForm';
+// OrderManagement submodule removed per user request
+import InventoryManagement from './components/inventory/InventoryManagement';
+import ConfirmOrderNew from './components/orders/ConfirmOrderNew';
+import OrderManagement from './components/orders/OrderManagement';
+import CheckInProcess from './components/checkin/CheckInProcess';
+import InvoiceList from './components/invoice/InvoiceList';
 import FPOList from './components/fpo/FPOList';
 import FPOForm from './components/fpo/FPOForm';
 import PurchaseOrderList from './components/purchase/PurchaseOrderList';
@@ -89,9 +98,15 @@ function AppRoutes() {
         <Route path="/purchase-orders" element={<PurchaseOrderList />} />
         <Route path="/purchase-orders/new" element={<PurchaseOrderList />} />
 
+        {/* FPO routes restored */}
         <Route path="/fpo" element={<FPOList />} />
         <Route path="/fpo/new" element={<FPOForm />} />
         <Route path="/fpo/:id" element={<FPOForm />} />
+        <Route path="/order-management" element={<OrderManagement />} />
+        <Route path="/confirm-orders" element={<ConfirmOrderNew />} />
+        <Route path="/check-in-process" element={<CheckInProcess />} />
+        <Route path="/inventory-management" element={<InventoryManagement />} />
+        <Route path="/invoices" element={<InvoiceList />} />
 
         {/* Inward / Issuance / Invoices removed */}
 
