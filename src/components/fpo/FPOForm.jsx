@@ -291,7 +291,7 @@ const FPOForm = () => {
           </div>
           <StatusBadge status={fpo.status} />
         </div>
-  <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3">
           {user.role !== 'Sales Manager' && fpo.status === 'Draft' && (
             <>
               <button
