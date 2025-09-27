@@ -324,7 +324,14 @@ const BudgetList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{new Date(budget.budgetDate).toLocaleDateString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{budget.budgetValue}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{budget.quoteSentStatus === 'YES' && budget.quoteSentDate ? new Date(budget.quoteSentDate).toLocaleDateString() : '-'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{getStatusBadge(budget.status)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <div className="space-y-1">
+                      {getStatusBadge(budget.status)}
+                      <div className="text-xs text-gray-500 min-h-[20px] leading-snug">
+                        {(budget.notes || budget.budgetDetails?.notes || '').slice(0, 60)}
+                      </div>
+                    </div>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">{getStatusYesNoBadge(budget.quoteSentStatus)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 relative">
                     <div className="flex items-center space-x-2">

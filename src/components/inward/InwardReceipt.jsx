@@ -5,17 +5,17 @@ import StatusBadge from '../ui/StatusBadge';
 
 // Mock data for the dashboard part
 const incomingConsignments = [
-  { 
-    id: 'FPO-2024-008', 
-    vendor: 'Global Electronics', 
+  {
+    id: 'FPO-2024-008',
+    vendor: 'Global Electronics',
     eta: 'Today',
     status: 'In Transit',
     expectedQty: 40,
     receivedQty: 0,
   },
-  { 
-    id: 'FPO-2024-009', 
-    vendor: 'Component Solutions', 
+  {
+    id: 'FPO-2024-009',
+    vendor: 'Component Solutions',
     eta: 'Tomorrow',
     status: 'Awaiting Receipt',
     expectedQty: 50,
@@ -32,16 +32,16 @@ const incomingConsignments = [
 ];
 
 const fpoItemsData = {
-    'FPO-2024-008': [
-      { id: 1, product: 'Motherboard Assembly', code: 'MB-ASM-01', expectedQty: 20, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: true },
-      { id: 2, product: 'Power Supply Unit', code: 'PSU-004', expectedQty: 20, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: false },
-    ],
-    'FPO-2024-009': [
-      { id: 3, product: 'Casing Kit', code: 'CS-KIT-02', expectedQty: 50, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: true },
-    ],
-    'FPO-2024-011': [
-      { id: 4, product: 'Industrial Sensor', code: 'SEN-IND-01', expectedQty: 100, receivedQty: 60, batchNo: 'B-IS-0410', packagingDetails: 'Box of 100', status: 'Partial', hasChildParts: false },
-    ]
+  'FPO-2024-008': [
+    { id: 1, product: 'Motherboard Assembly', code: 'MB-ASM-01', expectedQty: 20, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: true },
+    { id: 2, product: 'Power Supply Unit', code: 'PSU-004', expectedQty: 20, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: false },
+  ],
+  'FPO-2024-009': [
+    { id: 3, product: 'Casing Kit', code: 'CS-KIT-02', expectedQty: 50, receivedQty: 0, batchNo: '', packagingDetails: '', status: 'Pending', hasChildParts: true },
+  ],
+  'FPO-2024-011': [
+    { id: 4, product: 'Industrial Sensor', code: 'SEN-IND-01', expectedQty: 100, receivedQty: 60, batchNo: 'B-IS-0410', packagingDetails: 'Box of 100', status: 'Partial', hasChildParts: false },
+  ]
 };
 
 
@@ -55,12 +55,13 @@ const InwardReceipt = () => {
 
   const startProcessingFpo = (fpoId) => {
     setProcessingFpoId(fpoId);
-    setItems(fpoItemsData[fpoId]?.map(item => ({
-        ...item, 
-        // If it's a partially received item, keep the receivedQty, otherwise reset to 0
-        receivedQty: item.status === 'Partial' ? item.receivedQty : 0, 
-        status: item.status === 'Partial' ? 'Partial' : 'Pending'
-    })) || []);
+    const base = fpoItemsData[fpoId] || [];
+    setItems(base.map(item => ({
+      ...item,
+      // If it's a partially received item, keep the receivedQty, otherwise reset to 0
+      receivedQty: item.status === 'Partial' ? item.receivedQty : 0,
+      status: item.status === 'Partial' ? 'Partial' : 'Pending'
+    })));
     setUnplannedItems([]);
     setVendorInvoiceNo('');
   };
@@ -86,15 +87,15 @@ const InwardReceipt = () => {
       return item;
     }));
   };
-  
+
   const handleUnplannedItemChange = (id, field, value) => {
     setUnplannedItems(prev => prev.map(item => item.id === id ? { ...item, [field]: value } : item));
   };
-  
+
   const addUnplannedItem = () => {
     setUnplannedItems(prev => [...prev, { id: Date.now(), product: '', code: '', receivedQty: 1, batchNo: '', packagingDetails: '' }]);
   };
-  
+
   const removeUnplannedItem = (id) => {
     setUnplannedItems(prev => prev.filter(item => item.id !== id));
   };
@@ -103,12 +104,12 @@ const InwardReceipt = () => {
     setItemToMap(item);
     setShowMappingModal(true);
   };
-  
+
   const overallStatus = useMemo(() => {
     if (!items || items.length === 0) return 'Pending';
     const totalExpected = items.reduce((acc, item) => acc + item.expectedQty, 0);
     const totalReceived = items.reduce((acc, item) => acc + (parseInt(item.receivedQty, 10) || 0), 0);
-    
+
     if (totalReceived === 0) return 'Pending';
     if (totalReceived >= totalExpected) return 'Fully Received';
     return 'Partially Received';
@@ -117,51 +118,51 @@ const InwardReceipt = () => {
   // View for the Inward Dashboard
   const renderDashboard = () => (
     <div className="space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">Inward Dashboard</h1>
-            <button className="flex items-center justify-center px-4 py-2 border border-dashed border-gray-400 text-gray-600 rounded-lg hover:bg-gray-50">
-                <Plus className="h-4 w-4 mr-2" /> Create Unplanned Receipt
-            </button>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Incoming Consignments</h2>
-            <div className="space-y-4">
-                {incomingConsignments.map(consignment => (
-                    <div key={consignment.id} className="border rounded-lg p-4 flex flex-wrap items-center justify-between gap-4 hover:shadow-md transition-shadow">
-                        <div className="flex-1 min-w-[200px]">
-                            <p className="font-bold text-blue-600">{consignment.id}</p>
-                            <p className="text-sm text-gray-700">{consignment.vendor}</p>
-                        </div>
-                        <div className="flex-1 min-w-[150px]">
-                            <p className="text-sm text-gray-500">ETA</p>
-                            <p className="font-medium">{consignment.eta}</p>
-                        </div>
-                        <div className="flex-1 min-w-[150px]">
-                            <p className="text-sm text-gray-500">Expected vs. Received</p>
-                            <p className="font-medium">{consignment.receivedQty} / {consignment.expectedQty} units</p>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
-                                <div 
-                                    className="bg-green-500 h-2 rounded-full" 
-                                    style={{ width: `${(consignment.receivedQty / consignment.expectedQty) * 100}%` }}
-                                ></div>
-                            </div>
-                        </div>
-                        <div className="flex-1 min-w-[120px] text-center">
-                            <StatusBadge status={consignment.status} />
-                        </div>
-                        <div className="flex-shrink-0">
-                            <button 
-                                onClick={() => startProcessingFpo(consignment.id)}
-                                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                            >
-                                <Truck className="h-4 w-4 mr-2" />
-                                Process Receipt
-                            </button>
-                        </div>
-                    </div>
-                ))}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900">Inward Dashboard</h1>
+        <button onClick={() => startProcessingFpo('UNPLANNED')} className="flex items-center justify-center px-4 py-2 border border-dashed border-gray-400 text-gray-600 rounded-lg hover:bg-gray-50">
+          <Plus className="h-4 w-4 mr-2" /> Create Unplanned Receipt
+        </button>
+      </div>
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">Incoming Consignments</h2>
+        <div className="space-y-4">
+          {incomingConsignments.map(consignment => (
+            <div key={consignment.id} className="border rounded-lg p-4 flex flex-wrap items-center justify-between gap-4 hover:shadow-md transition-shadow">
+              <div className="flex-1 min-w-[200px]">
+                <p className="font-bold text-blue-600">{consignment.id}</p>
+                <p className="text-sm text-gray-700">{consignment.vendor}</p>
+              </div>
+              <div className="flex-1 min-w-[150px]">
+                <p className="text-sm text-gray-500">ETA</p>
+                <p className="font-medium">{consignment.eta}</p>
+              </div>
+              <div className="flex-1 min-w-[150px]">
+                <p className="text-sm text-gray-500">Expected vs. Received</p>
+                <p className="font-medium">{consignment.receivedQty} / {consignment.expectedQty} units</p>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                  <div
+                    className="bg-green-500 h-2 rounded-full"
+                    style={{ width: `${(consignment.receivedQty / consignment.expectedQty) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+              <div className="flex-1 min-w-[120px] text-center">
+                <StatusBadge status={consignment.status} />
+              </div>
+              <div className="flex-shrink-0">
+                <button
+                  onClick={() => startProcessingFpo(consignment.id)}
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  <Truck className="h-4 w-4 mr-2" />
+                  Process Receipt
+                </button>
+              </div>
             </div>
+          ))}
         </div>
+      </div>
     </div>
   );
 
@@ -170,8 +171,8 @@ const InwardReceipt = () => {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
-            <button onClick={backToDashboard} className="p-2 hover:bg-gray-100 rounded-lg"><ArrowLeft className="h-5 w-5" /></button>
-            <h1 className="text-2xl font-bold text-gray-900">Process Receipt for {processingFpoId}</h1>
+          <button onClick={backToDashboard} className="p-2 hover:bg-gray-100 rounded-lg"><ArrowLeft className="h-5 w-5" /></button>
+          <h1 className="text-2xl font-bold text-gray-900">Process Receipt for {processingFpoId}</h1>
         </div>
         <div className="flex items-center space-x-3">
           <button className="flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"><Save className="h-4 w-4 mr-2" />Save as Draft</button>
@@ -229,7 +230,7 @@ const InwardReceipt = () => {
           </div>
         </div>
       )}
-      
+
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-lg font-medium text-gray-900">Unplanned Items</h2>
@@ -298,7 +299,7 @@ const InwardReceipt = () => {
 
   return (
     <div>
-        {processingFpoId ? renderProcessingForm() : renderDashboard()}
+      {processingFpoId ? renderProcessingForm() : renderDashboard()}
     </div>
   );
 };

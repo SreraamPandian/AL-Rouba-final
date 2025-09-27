@@ -83,6 +83,7 @@ const BudgetCreateEdit = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [budgetData, setBudgetData] = useState(getInitialState());
   const [originalBudgetId, setOriginalBudgetId] = useState(null);
+  const [quickProductSearch, setQuickProductSearch] = useState('');
 
   useEffect(() => {
     if (isEditOrRevision) {
@@ -371,9 +372,18 @@ const BudgetCreateEdit = () => {
         ...prev,
         budgetDetails: {
           ...prev.budgetDetails,
-          products: prev.budgetDetails.products.map((product, i) =>
-            i === index ? { ...product, [field]: value, amount: (field === 'qty' ? value : product.qty) * (field === 'unitPrice' ? value : product.unitPrice) } : product
-          )
+          products: prev.budgetDetails.products.map((product, i) => {
+            if (i !== index) return product;
+            const updated = { ...product, [field]: value };
+            // ensure defaults
+            const qty = field === 'qty' ? (parseFloat(value) || 0) : (product.qty || 0);
+            const unitPrice = field === 'unitPrice' ? (parseFloat(value) || 0) : (product.unitPrice || 0);
+            const conversionRate = field === 'conversionRate' ? (parseFloat(value) || 1) : (product.conversionRate || 1);
+            // compute base amount using converted price
+            const convertedUnitPrice = unitPrice * conversionRate;
+            updated.amount = qty * convertedUnitPrice;
+            return updated;
+          })
         }
       }));
     };
@@ -398,14 +408,69 @@ const BudgetCreateEdit = () => {
     };
 
     const addProduct = () => {
-      setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, products: [...prev.budgetDetails.products, { id: Date.now(), name: '', description: '', unit: 'Pieces', qty: 1, unitPrice: 0, buyingTax: 5, margin: 20, sellingTax: 5, amount: 0 }] } }));
+      setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, products: [...prev.budgetDetails.products, { id: Date.now(), name: '', description: '', unit: 'Pieces', qty: 1, unitPrice: 0, buyingCurrency: 'OMR', conversionRate: 1, buyingTax: 5, margin: 20, sellingTax: 5, amount: 0 }] } }));
+    };
+
+    const quickAddSelectedProduct = (product) => {
+      setBudgetData(prev => ({
+        ...prev,
+        budgetDetails: {
+          ...prev.budgetDetails,
+          products: [
+            ...prev.budgetDetails.products,
+            {
+              id: Date.now(),
+              name: product.name,
+              description: product.description,
+              unit: product.unit || 'Pieces',
+              qty: 1,
+              unitPrice: product.price || 0,
+              buyingCurrency: 'OMR',
+              conversionRate: 1,
+              buyingTax: 5,
+              margin: 20,
+              sellingTax: 5,
+              amount: 1 * (product.price || 0)
+            }
+          ]
+        }
+      }));
+      setQuickProductSearch('');
+    };
+
+    const quickAddByName = () => {
+      if (!quickProductSearch.trim()) return;
+      setBudgetData(prev => ({
+        ...prev,
+        budgetDetails: {
+          ...prev.budgetDetails,
+          products: [
+            ...prev.budgetDetails.products,
+            {
+              id: Date.now(),
+              name: quickProductSearch.trim(),
+              description: '',
+              unit: 'Pieces',
+              qty: 1,
+              unitPrice: 0,
+              buyingCurrency: 'OMR',
+              conversionRate: 1,
+              buyingTax: 5,
+              margin: 20,
+              sellingTax: 5,
+              amount: 0
+            }
+          ]
+        }
+      }));
+      setQuickProductSearch('');
     };
 
     const removeProduct = (index) => {
       setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, products: prev.budgetDetails.products.filter((_, i) => i !== index) } }));
     };
 
-    const subTotal = budgetData.budgetDetails.products.reduce((sum, p) => sum + (p.qty * p.unitPrice), 0);
+    const subTotal = budgetData.budgetDetails.products.reduce((sum, p) => sum + (p.qty * (p.unitPrice * (p.conversionRate || 1))), 0);
     const discount = (subTotal * budgetData.budgetDetails.discount) / 100;
     const vatAmount = ((subTotal - discount) * budgetData.budgetDetails.vat) / 100;
     const freight = budgetData.budgetDetails.freightCharges.landFreight + budgetData.budgetDetails.freightCharges.airFreight + budgetData.budgetDetails.freightCharges.seaFreight;
@@ -532,7 +597,43 @@ const BudgetCreateEdit = () => {
           <textarea value={budgetData.budgetDetails.notes} onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, notes: e.target.value } }))} rows={3} className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
         </div>
         <div className="mb-6">
-          <div className="flex justify-between items-center mb-4"><h3 className="text-lg font-medium">Products</h3></div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">Products</h3>
+          </div>
+
+          {/* Quick product add (search dropdown outside the table) */}
+          <div className="mb-4 p-3 border rounded-lg bg-gray-50">
+            <label className="block text-sm font-medium mb-2 text-gray-700">Add Product</label>
+            <div className="flex gap-2 items-start">
+              <div className="flex-1">
+                <ProductDropdown
+                  value={quickProductSearch}
+                  onChange={(e) => setQuickProductSearch(e.target.value)}
+                  onProductSelect={(product) => quickAddSelectedProduct(product)}
+                  placeholder="Type to search and select product..."
+                  className="w-full"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={quickAddByName}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                title="Add with current text"
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={addProduct}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
+                title="Add empty row"
+              >
+                Empty Row
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Tip: Select a product from the dropdown to auto-fill name, description, unit and price.</p>
+          </div>
+
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200">
               <thead className="bg-gray-50"><tr className="border-b border-gray-200">
@@ -541,6 +642,8 @@ const BudgetCreateEdit = () => {
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">UOM</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Quantity</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Buying Price</th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Buying Currency</th>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Conversion Rate</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Tax %</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Total Buying</th>
                 <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Total with Tax</th>
@@ -555,26 +658,37 @@ const BudgetCreateEdit = () => {
                 {budgetData.budgetDetails.products.map((p, i) => (
                   <tr key={p.id} className="hover:bg-gray-50">
                     <td>
-                      <ProductDropdown
-                        value={p.name}
+                      <input
+                        type="text"
+                        value={p.name || ''}
                         onChange={(e) => updateProduct(i, 'name', e.target.value)}
-                        onProductSelect={(product) => handleProductSelect(i, product)}
-                        placeholder="Type to search products..."
                         className="w-full px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm"
+                        placeholder="Product name"
                       />
                     </td>
                     <td><input type="text" value={p.description || ''} onChange={(e) => updateProduct(i, 'description', e.target.value)} className="w-full px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
                     <td><select value={p.unit || 'Pieces'} onChange={(e) => updateProduct(i, 'unit', e.target.value)} className="w-20 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm"><option>Pieces</option><option>Units</option><option>Kg</option><option>Bags</option></select></td>
                     <td><input type="number" value={p.qty} onChange={(e) => updateProduct(i, 'qty', parseInt(e.target.value) || 0)} className="w-20 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
                     <td><input type="number" value={p.unitPrice} onChange={(e) => updateProduct(i, 'unitPrice', parseFloat(e.target.value) || 0)} className="w-24 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td>
+                      <select value={p.buyingCurrency || 'OMR'} onChange={(e) => updateProduct(i, 'buyingCurrency', e.target.value)} className="w-24 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm">
+                        <option value="OMR">OMR</option>
+                        <option value="USD">USD</option>
+                        <option value="AED">AED</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                        <option value="INR">INR</option>
+                      </select>
+                    </td>
+                    <td><input type="number" value={p.conversionRate || 1} onChange={(e) => updateProduct(i, 'conversionRate', parseFloat(e.target.value) || 1)} className="w-24 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" step="0.0001" /></td>
                     <td><input type="number" value={p.buyingTax || 5} onChange={(e) => updateProduct(i, 'buyingTax', parseFloat(e.target.value) || 0)} className="w-16 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
-                    <td><input type="number" value={(p.qty * p.unitPrice).toFixed(2)} readOnly className="w-24 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
-                    <td><input type="number" value={(p.qty * p.unitPrice * (1 + (p.buyingTax || 5) / 100)).toFixed(2)} readOnly className="w-24 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td><input type="number" value={(p.qty * (p.unitPrice * (p.conversionRate || 1))).toFixed(2)} readOnly className="w-24 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td><input type="number" value={(p.qty * (p.unitPrice * (p.conversionRate || 1)) * (1 + (p.buyingTax || 5) / 100)).toFixed(2)} readOnly className="w-24 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
                     <td><input type="number" value={p.margin || 20} onChange={(e) => updateProduct(i, 'margin', parseFloat(e.target.value) || 0)} className="w-16 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
-                    <td><input type="number" value={(p.unitPrice * (1 + (p.margin || 20) / 100)).toFixed(2)} readOnly className="w-24 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td><input type="number" value={((p.unitPrice * (p.conversionRate || 1)) * (1 + (p.margin || 20) / 100)).toFixed(2)} readOnly className="w-24 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
                     <td><input type="number" value={p.sellingTax || 5} onChange={(e) => updateProduct(i, 'sellingTax', parseFloat(e.target.value) || 0)} className="w-16 px-2 py-1 border border-gray-300 rounded text-gray-900 text-sm" /></td>
-                    <td><input type="number" value={(p.qty * p.unitPrice * (1 + (p.margin || 20) / 100)).toFixed(2)} readOnly className="w-28 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
-                    <td><input type="number" value={(p.qty * p.unitPrice * (1 + (p.margin || 20) / 100) * (1 + (p.sellingTax || 5) / 100)).toFixed(2)} readOnly className="w-28 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td><input type="number" value={(p.qty * (p.unitPrice * (p.conversionRate || 1)) * (1 + (p.margin || 20) / 100)).toFixed(2)} readOnly className="w-28 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
+                    <td><input type="number" value={(p.qty * (p.unitPrice * (p.conversionRate || 1)) * (1 + (p.margin || 20) / 100) * (1 + (p.sellingTax || 5) / 100)).toFixed(2)} readOnly className="w-28 px-2 py-1 bg-gray-50 border border-gray-300 rounded text-gray-900 text-sm" /></td>
                     <td><button onClick={() => removeProduct(i)} className="text-red-400 hover:text-red-600"><Trash2 className="h-4 w-4" /></button></td>
                   </tr>
                 ))}
@@ -618,7 +732,7 @@ const BudgetCreateEdit = () => {
 
   const renderStep3 = () => {
     const { quotationData, budgetDetails, selectedEnquiry } = budgetData;
-    const subTotal = budgetDetails.products.reduce((sum, p) => sum + (p.qty * p.unitPrice * (1 + p.margin / 100)), 0);
+    const subTotal = budgetDetails.products.reduce((sum, p) => sum + (p.qty * (p.unitPrice * (p.conversionRate || 1)) * (1 + p.margin / 100)), 0);
     const vatAmount = subTotal * (budgetDetails.vat / 100);
     const grandTotal = subTotal + vatAmount;
     return (
@@ -636,7 +750,7 @@ const BudgetCreateEdit = () => {
               <th className="border border-gray-300 px-4 py-2 text-left">SL NO.</th><th className="border border-gray-300 px-4 py-2 text-left">Customer Description</th><th className="border border-gray-300 px-4 py-2 text-left">DESCRIPTION</th><th className="border border-gray-300 px-4 py-2 text-left">Qty</th><th className="border border-gray-300 px-4 py-2 text-left">Delivery</th><th className="border border-gray-300 px-4 py-2 text-left">UNIT</th><th className="border border-gray-300 px-4 py-2 text-left">UNIT PRICE IN OMR</th><th className="border border-gray-300 px-4 py-2 text-left">AMOUNT IN OMR</th>
             </tr></thead>
             <tbody>
-              {budgetDetails.products.map((p, i) => <tr key={i}><td className="border border-gray-300 px-4 py-2">{i + 1}</td><td className="border border-gray-300 px-4 py-2">{p.name}</td><td className="border border-gray-300 px-4 py-2">{p.description}</td><td className="border border-gray-300 px-4 py-2">{p.qty}</td><td className="border border-gray-300 px-4 py-2">{p.delivery}</td><td className="border border-gray-300 px-4 py-2">{p.unit}</td><td className="border border-gray-300 px-4 py-2">{(p.unitPrice * (1 + p.margin / 100)).toFixed(2)}</td><td className="border border-gray-300 px-4 py-2">{(p.qty * p.unitPrice * (1 + p.margin / 100)).toFixed(2)}</td></tr>)}
+              {budgetDetails.products.map((p, i) => <tr key={i}><td className="border border-gray-300 px-4 py-2">{i + 1}</td><td className="border border-gray-300 px-4 py-2">{p.name}</td><td className="border border-gray-300 px-4 py-2">{p.description}</td><td className="border border-gray-300 px-4 py-2">{p.qty}</td><td className="border border-gray-300 px-4 py-2">{p.delivery}</td><td className="border border-gray-300 px-4 py-2">{p.unit}</td><td className="border border-gray-300 px-4 py-2">{((p.unitPrice * (p.conversionRate || 1)) * (1 + p.margin / 100)).toFixed(2)}</td><td className="border border-gray-300 px-4 py-2">{(p.qty * (p.unitPrice * (p.conversionRate || 1)) * (1 + p.margin / 100)).toFixed(2)}</td></tr>)}
               <tr><td colSpan="6" className="border border-gray-300 px-4 py-2 text-right font-bold">SUB TOTAL (OMR)</td><td className="border border-gray-300 px-4 py-2">{budgetDetails.products.length}</td><td className="border border-gray-300 px-4 py-2 font-bold">{subTotal.toFixed(2)}</td></tr>
               <tr><td colSpan="7" className="border border-gray-300 px-4 py-2 text-right">VAT (5%)</td><td className="border border-gray-300 px-4 py-2">{vatAmount.toFixed(3)}</td></tr>
               <tr><td colSpan="7" className="border border-gray-300 px-4 py-2 text-right font-bold">TOTAL IN OMR</td><td className="border border-gray-300 px-4 py-2 font-bold">{grandTotal.toFixed(2)}</td></tr>

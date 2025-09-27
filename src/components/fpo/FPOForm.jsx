@@ -13,6 +13,7 @@ const FPOForm = () => {
   const { user } = useAuth();
   const { salesOrders } = useSalesOrders();
   const salesOrderItem = location.state?.salesOrderItem;
+  const salesOrderItems = location.state?.salesOrderItems; // optional array from multi-select
   const isEdit = !!id || id === 'FPO-2024-001';
   const isManager = user?.role === 'Sales Manager';
 
@@ -105,7 +106,17 @@ const FPOForm = () => {
         currency: 'USD',
         taxRate: 10,
         notes: '',
-        items: salesOrderItem ? [{
+        items: salesOrderItems && salesOrderItems.length ? salesOrderItems.map((it, idx) => ({
+          id: idx + 1,
+          product: it.product,
+          productCode: it.code,
+          quantity: it.requestedQty,
+          unit: 'PCS',
+          vendorRate: 0,
+          currency: 'USD',
+          total: 0,
+          specifications: ''
+        })) : (salesOrderItem ? [{
           id: 1,
           product: salesOrderItem.product,
           productCode: salesOrderItem.code,
@@ -115,7 +126,7 @@ const FPOForm = () => {
           currency: 'USD',
           total: 0,
           specifications: ''
-        }] : []
+        }] : [])
       };
     }
   });

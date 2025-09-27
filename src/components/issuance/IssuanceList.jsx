@@ -48,7 +48,7 @@ const IssuanceList = () => {
           <h1 className="text-2xl font-bold text-gray-900">Inventory Issuance</h1>
           <p className="text-gray-600">Track items issued from the warehouse for delivery.</p>
         </div>
-        <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <button onClick={() => navigate('/issuance/new')} className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
           <Plus className="h-4 w-4 mr-2" />
           Manual Issuance
         </button>

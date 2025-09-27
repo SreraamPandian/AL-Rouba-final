@@ -68,7 +68,12 @@ const QuotationList = () => {
     {
       key: 'status',
       label: 'Status',
-      render: (value) => <StatusBadge status={value} />
+      render: (value) => (
+        <div className="space-y-1">
+          <StatusBadge status={value} />
+          <div className="text-xs text-gray-500 min-h-[20px] leading-snug">{/* reserved for notes under status */}</div>
+        </div>
+      )
     },
     {
       key: 'quoteSentStatus',
