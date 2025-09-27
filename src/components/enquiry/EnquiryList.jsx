@@ -65,11 +65,6 @@ const EnquiryList = () => {
       sortable: true
     },
     {
-      key: 'currentStage',
-      label: 'Current Stage',
-      render: (value) => <StatusBadge status={value} />
-    },
-    {
       key: 'nextAction',
       label: 'Next Action',
       render: (value) => (
