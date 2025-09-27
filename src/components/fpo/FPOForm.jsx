@@ -241,6 +241,24 @@ const FPOForm = () => {
     alert('FPO has been approved.');
   };
 
+  // Sales Executive quick-approve (for new FPO page) - single approve button at the end
+  const execApproveFPO = () => {
+    // only allow if user is sales exec (not manager) and in create mode (id not present)
+    if (user?.role === 'Sales Manager') {
+      alert('Managers should use the manager approval flow.');
+      return;
+    }
+    setFpo(prev => ({ ...prev, status: 'Approved', approvedBy: user?.name || 'Sales Exec', approvedDate: new Date().toLocaleDateString() }));
+    alert('FPO approved by Sales Executive.');
+  };
+
+  const rejectFPO = () => {
+    const confirmed = window.confirm('Are you sure you want to reject this FPO?');
+    if (!confirmed) return;
+    setFpo(prev => ({ ...prev, status: 'Rejected' }));
+    alert('FPO has been rejected.');
+  };
+
   const calculateSubtotal = () => {
     return fpo.items.reduce((sum, item) => sum + (item.total || 0), 0);
   };
@@ -273,7 +291,7 @@ const FPOForm = () => {
           </div>
           <StatusBadge status={fpo.status} />
         </div>
-        <div className="flex items-center space-x-3">
+  <div className="flex items-center space-x-3">
           {user.role !== 'Sales Manager' && fpo.status === 'Draft' && (
             <>
               <button
@@ -308,6 +326,7 @@ const FPOForm = () => {
           </button>
         </div>
       </div>
+
 
       {/* FPO Details */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -631,6 +650,27 @@ const FPOForm = () => {
             />
           </div>
         </div>
+      </div>
+      {/* Footer Actions: Exec approve on new FPO, Manager approve/reject on edit view */}
+      <div className="flex items-center justify-end space-x-3">
+        {/* Sales Executive - single approve button on new FPO page */}
+        {!isEdit && user?.role !== 'Sales Manager' && (
+          <button onClick={execApproveFPO} className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+            <Send className="h-4 w-4 mr-2" />Approve
+          </button>
+        )}
+
+        {/* Sales Manager - Approve and Reject when viewing an existing FPO */}
+        {isEdit && isManager && (
+          <>
+            <button onClick={approveFPO} className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+              <Send className="h-4 w-4 mr-2" />Approve
+            </button>
+            <button onClick={rejectFPO} className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+              <Trash2 className="h-4 w-4 mr-2" />Reject
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

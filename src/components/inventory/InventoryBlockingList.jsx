@@ -160,7 +160,7 @@ const InventoryBlockingList = () => {
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4"><div className="flex items-center"><div className="flex-shrink-0"><AlertTriangle className="h-5 w-5 text-yellow-600" /></div><div className="ml-3"><p className="text-sm font-medium text-yellow-800">Active Blocks</p><p className="text-lg font-semibold text-yellow-900">{activeBlocks.length}</p></div></div></div>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4"><div className="flex items-center"><div className="flex-shrink-0"><Clock className="h-5 w-5 text-red-600" /></div><div className="ml-3"><p className="text-sm font-medium text-red-800">Expired Blocks</p><p className="text-lg font-semibold text-red-900">{expiredBlocks.length}</p></div></div></div>
         <div className="bg-green-50 border border-green-200 rounded-lg p-4"><div className="flex items-center"><div className="flex-shrink-0"><Unlock className="h-5 w-5 text-green-600" /></div><div className="ml-3"><p className="text-sm font-medium text-green-800">Released Today</p><p className="text-lg font-semibold text-green-900">{blocks.filter(b => b.status === 'Released').length}</p></div></div></div>
-  {/* Total Blocks card removed as requested */}
+        {/* Total Blocks card removed as requested */}
       </div>
 
       {/* Filter Tabs */}
