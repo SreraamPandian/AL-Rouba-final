@@ -479,84 +479,7 @@ const BudgetCreateEdit = () => {
     return (
       <div className="space-y-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Budget Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">Select Payment Days</label>
-            <select
-              value={budgetData.budgetDetails.paymentDays || '30 Days'}
-              onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, paymentDays: e.target.value } }))}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="15 Days">15 Days</option>
-              <option value="30 Days">30 Days</option>
-              <option value="45 Days">45 Days</option>
-              <option value="60 Days">60 Days</option>
-              <option value="90 Days">90 Days</option>
-              <option value="120 Days">120 Days</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">Select Tax Type</label>
-            <select
-              value={budgetData.budgetDetails.taxType || 'VAT 5%'}
-              onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, taxType: e.target.value } }))}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="VAT 5%">VAT 5%</option>
-              <option value="VAT 10%">VAT 10%</option>
-              <option value="VAT 15%">VAT 15%</option>
-              <option value="GST 5%">GST 5%</option>
-              <option value="GST 12%">GST 12%</option>
-              <option value="GST 18%">GST 18%</option>
-              <option value="No Tax">No Tax</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">Choose Delivery Days</label>
-            <select
-              value={budgetData.budgetDetails.deliveryDays || '14 Days'}
-              onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, deliveryDays: e.target.value } }))}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="7 Days">7 Days</option>
-              <option value="14 Days">14 Days</option>
-              <option value="21 Days">21 Days</option>
-              <option value="30 Days">30 Days</option>
-              <option value="45 Days">45 Days</option>
-              <option value="60 Days">60 Days</option>
-              <option value="90 Days">90 Days</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">Choose Licenses Offering</label>
-            <select
-              value={budgetData.budgetDetails.licensesOffering || 'Standard'}
-              onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, licensesOffering: e.target.value } }))}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="Standard">Standard</option>
-              <option value="Premium">Premium</option>
-              <option value="Enterprise">Enterprise</option>
-              <option value="Professional">Professional</option>
-              <option value="Basic">Basic</option>
-              <option value="Custom">Custom</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">Choose Payment Term</label>
-            <select
-              value={budgetData.budgetDetails.paymentTerm || 'Advance'}
-              onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, paymentTerm: e.target.value } }))}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="Advance">Advance</option>
-              <option value="Credit">Credit</option>
-              <option value="COD">Cash on Delivery</option>
-              <option value="L/C">Letter of Credit</option>
-              <option value="Net Banking">Net Banking</option>
-              <option value="Cheque">Cheque</option>
-            </select>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           <div>
             <label className="block text-sm font-medium mb-2 text-gray-700">Choose Currency</label>
             <select
@@ -570,22 +493,6 @@ const BudgetCreateEdit = () => {
               <option value="EUR">EUR - Euro</option>
               <option value="GBP">GBP - British Pound</option>
               <option value="INR">INR - Indian Rupee</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-700">Choose Shipping</label>
-            <select
-              value={budgetData.budgetDetails.shipping || 'FOB'}
-              onChange={(e) => setBudgetData(prev => ({ ...prev, budgetDetails: { ...prev.budgetDetails, shipping: e.target.value } }))}
-              className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="FOB">FOB - Free On Board</option>
-              <option value="CIF">CIF - Cost, Insurance & Freight</option>
-              <option value="CFR">CFR - Cost & Freight</option>
-              <option value="EXW">EXW - Ex Works</option>
-              <option value="DDP">DDP - Delivered Duty Paid</option>
-              <option value="DDU">DDU - Delivered Duty Unpaid</option>
-              <option value="FAS">FAS - Free Alongside Ship</option>
             </select>
           </div>
         </div>
