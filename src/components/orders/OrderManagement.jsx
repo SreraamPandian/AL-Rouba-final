@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, Download } from 'lucide-react';
 import OrderView from './OrderView';
+import SalesOrderForm from './SalesOrderForm';
 
 const sampleOrders = Array.from({ length: 10 }).map((_, i) => ({
     id: 76 - i,
@@ -23,12 +24,14 @@ const OrderManagement = () => {
         const a = document.createElement('a'); a.href = url; a.download = 'orders.csv'; a.click(); URL.revokeObjectURL(url);
     };
 
+    const [showCreate, setShowCreate] = useState(false);
+
     return (
         <div className="p-6">
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold">Order Management</h1>
                 <div className="space-x-3">
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-md">Create Sale Order</button>
+                    <button onClick={() => setShowCreate(true)} className="px-4 py-2 bg-blue-600 text-white rounded-md">Create Sale Order</button>
                     <button onClick={handleExport} className="px-4 py-2 bg-slate-800 text-white rounded-md inline-flex items-center space-x-2"><Download size={16} /><span>Export</span></button>
                 </div>
             </div>
@@ -67,6 +70,20 @@ const OrderManagement = () => {
             </div>
 
             {view && <OrderView order={view} onClose={() => setView(null)} />}
+
+            {showCreate && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+                    <div className="absolute inset-0 bg-black opacity-50" onClick={() => setShowCreate(false)} />
+                    <div className="bg-white w-full max-w-[1200px] max-h-[calc(100vh-120px)] overflow-y-auto rounded-lg shadow-lg z-50 p-6 m-4 pb-32">
+                        <SalesOrderForm isModal={true} onClose={() => setShowCreate(false)} />
+                        {/* Footer buttons fixed to bottom of modal container */}
+                        <div className="w-full sticky bottom-0 left-0 bg-white border-t py-4 flex justify-end space-x-3 px-6">
+                            <button onClick={() => document.getElementById('sales-order-form-modal')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))} className="px-6 py-2 bg-blue-600 text-white rounded-lg">Create Sale Order</button>
+                            <button onClick={() => setShowCreate(false)} className="px-6 py-2 border border-gray-300 rounded-lg">Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
