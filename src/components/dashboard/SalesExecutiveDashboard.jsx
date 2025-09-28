@@ -47,7 +47,7 @@ const SalesExecutiveDashboard = () => {
     { name: 'New Enquiry', href: '/enquiries/new', icon: MessageSquare },
     { name: 'Create Budget', href: '/budget/new', icon: Calculator },
     { name: 'Generate Quotation', href: '/quotations/new', icon: FileText },
-    { name: 'New Sales Order', href: '/sales-orders/new', icon: ShoppingCart }
+    { name: 'Direct Sales Order', href: '/sales-orders/new', icon: ShoppingCart }
   ];
 
   const recentActivity = [

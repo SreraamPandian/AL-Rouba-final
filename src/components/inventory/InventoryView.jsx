@@ -22,7 +22,7 @@ const InventoryView = ({ item, onClose }) => {
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">UOM</div><div className="font-medium">{item.uom}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">QUANTITY ON HAND</div><div className="font-medium">{item.qtyOnHand}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">BRANCH</div><div className="font-medium">{item.branch} - Qty ({item.qtyOnHand})</div></div>
-                    <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">ALLOCATED QTY</div><div className="font-medium">{item.allocatedQty}</div></div>
+                    <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">BLOCKED QUANTITY</div><div className="font-medium">{item.allocatedQty}</div></div>
                 </div>
 
                 <div className="mt-6 flex justify-end">

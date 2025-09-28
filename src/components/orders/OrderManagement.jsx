@@ -71,11 +71,16 @@ const OrderManagement = () => {
 
             {view && <OrderView order={view} onClose={() => setView(null)} />}
 
+            {/* Inline modal: Create Sale Order popup */}
             {showCreate && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
-                    <div className="absolute inset-0 bg-black opacity-50" onClick={() => setShowCreate(false)} />
-                    <div className="bg-white w-full max-w-[1200px] max-h-[calc(100vh-120px)] overflow-y-auto rounded-lg shadow-lg z-50 p-6 m-4 pb-48 relative">
-                        <SalesOrderForm isModal={true} onClose={() => setShowCreate(false)} />
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+                    <div className="bg-white w-[95%] md:w-4/5 lg:w-3/4 max-h-[90vh] overflow-hidden rounded-lg shadow-lg">
+                        <div className="h-full overflow-auto">
+                            {/* Render the sales order form in modal mode */}
+                            <div className="p-4">
+                                <SalesOrderForm isModal={true} onClose={() => setShowCreate(false)} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

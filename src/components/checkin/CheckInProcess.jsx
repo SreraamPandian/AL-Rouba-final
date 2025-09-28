@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Eye, Printer, Search, ChevronDown } from 'lucide-react';
 import CheckInDetailsModal from './CheckInDetailsModal';
+import AddCheckIn from './AddCheckIn';
 
 const sampleCheckInData = [
     {
@@ -163,8 +164,11 @@ const CheckInProcess = () => {
         window.print();
     };
 
+    const [showAddCheckIn, setShowAddCheckIn] = useState(false);
+
     const handleCheckIn = () => {
-        alert('Check In functionality would be implemented here');
+        // Open the Add Check In modal
+        setShowAddCheckIn(true);
     };
 
     return (
@@ -288,8 +292,8 @@ const CheckInProcess = () => {
                                     key={page}
                                     onClick={() => setCurrentPage(page)}
                                     className={`px-3 py-1 border rounded text-sm ${currentPage === page
-                                            ? 'bg-blue-600 text-white border-blue-600'
-                                            : 'border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-blue-600 text-white border-blue-600'
+                                        : 'border-gray-300 hover:bg-gray-50'
                                         }`}
                                 >
                                     {page}
@@ -314,6 +318,10 @@ const CheckInProcess = () => {
                     record={selectedRecord}
                     onClose={() => setShowModal(false)}
                 />
+            )}
+
+            {showAddCheckIn && (
+                <AddCheckIn onClose={() => setShowAddCheckIn(false)} />
             )}
         </div>
     );

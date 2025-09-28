@@ -14,7 +14,7 @@ const InventoryManagement = () => {
     const [viewItem, setViewItem] = useState(null);
 
     const handleExport = () => {
-        const csv = [['SL.NO', 'PRODUCT ID', 'PRODUCT NAME', 'UOM', 'CATEGORY', 'BRANCH', 'QUANTITY ON HAND', 'SELLING PRICE', 'ALLOCATED QTY'], ...items.map((it, idx) => [idx + 1, it.productId, it.name, it.uom, it.category, it.branch, it.qtyOnHand, it.sellingPrice, it.allocatedQty])].map(r => r.join(',')).join('\n');
+        const csv = [['SL.NO', 'PRODUCT ID', 'PRODUCT NAME', 'UOM', 'CATEGORY', 'BRANCH', 'QUANTITY ON HAND', 'BLOCKED QUANTITY'], ...items.map((it, idx) => [idx + 1, it.productId, it.name, it.uom, it.category, it.branch, it.qtyOnHand, it.allocatedQty])].map(r => r.join(',')).join('\n');
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a'); a.href = url; a.download = 'inventory.csv'; a.click(); URL.revokeObjectURL(url);
@@ -42,8 +42,7 @@ const InventoryManagement = () => {
                                 <th className="px-4 py-3">CATEGORY</th>
                                 <th className="px-4 py-3">BRANCH</th>
                                 <th className="px-4 py-3">QUANTITY ON HAND</th>
-                                <th className="px-4 py-3">SELLING PRICE</th>
-                                <th className="px-4 py-3">ALLOCATED QTY</th>
+                                <th className="px-4 py-3">BLOCKED QUANTITY</th>
                                 <th className="px-4 py-3">ACTION</th>
                             </tr>
                         </thead>
@@ -57,7 +56,6 @@ const InventoryManagement = () => {
                                     <td className="px-4 py-3">{it.category}</td>
                                     <td className="px-4 py-3">{it.branch}</td>
                                     <td className="px-4 py-3">{it.qtyOnHand}</td>
-                                    <td className="px-4 py-3">{it.sellingPrice}</td>
                                     <td className="px-4 py-3">{it.allocatedQty}</td>
                                     <td className="px-4 py-3"><button onClick={() => setViewItem(it)} className="bg-yellow-400 text-white px-3 py-1 rounded inline-flex items-center"><Eye size={16} /><span className="ml-2">View</span></button></td>
                                 </tr>

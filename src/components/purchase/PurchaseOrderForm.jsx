@@ -26,7 +26,7 @@ const PurchaseOrderForm = ({ onClose, onCreate }) => {
     const handleCreate = () => {
         const po = {
             id: Date.now(),
-            purchaseType: 'Local Purchase Order',
+            purchaseType: 'Direct Purchase Order',
             supplierInvoice: '',
             date: new Date().toLocaleDateString('en-GB'),
             supplier: '',
@@ -43,12 +43,16 @@ const PurchaseOrderForm = ({ onClose, onCreate }) => {
             <div className="absolute inset-0 bg-black opacity-40" onClick={onClose} />
             <div className="bg-white w-11/12 md:w-4/5 rounded-lg shadow-lg z-50 p-6">
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-semibold">Add Purchase Order</h2>
+                    <h2 className="text-xl font-semibold">Add Direct Purchase Order</h2>
                     <button onClick={onClose} className="p-2 rounded hover:bg-gray-100"><X /></button>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                    <select className="border p-2 rounded"><option>--Select Purchase Type--</option></select>
+                    <select className="border p-2 rounded">
+                        <option>--Select Purchase Type--</option>
+                        <option value="LPO">LPO</option>
+                        <option value="FPO">FPO</option>
+                    </select>
                     <select className="border p-2 rounded"><option>Select Supplier*</option></select>
                     <select className="border p-2 rounded"><option>Select Branch*</option></select>
                     <input className="border p-2 rounded" defaultValue={new Date().toLocaleDateString('en-GB')} />

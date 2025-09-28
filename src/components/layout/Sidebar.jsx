@@ -18,22 +18,29 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const navigationItems = [
     { name: 'Dashboard', href: '/dashboard', icon: Home, color: 'text-pink-500' },
-    { name: 'Enquiries', href: '/enquiries', icon: MessageSquare, color: 'text-gray-500' },
-    { name: 'Budget and Quote', href: '/budgets', icon: Calculator, color: 'text-gray-500' },
-    { name: 'Received Orders', href: '/received-orders', icon: ShoppingCart, color: 'text-gray-500' },
-    { name: 'Sales Orders', href: '/sales-orders', icon: Package, color: 'text-gray-500' },
-    { name: 'FPO', href: '/fpo', icon: Truck, color: 'text-gray-500' },
     {
-      name: 'Purchase Order',
+      name: 'CRM',
+      icon: MessageSquare,
+      color: 'text-gray-500',
+      children: [
+        { name: 'Enquiries', href: '/enquiries', icon: MessageSquare, color: 'text-gray-500' },
+        { name: 'Budget and Quote', href: '/budgets', icon: Calculator, color: 'text-gray-500' },
+        { name: 'Received Orders', href: '/received-orders', icon: ShoppingCart, color: 'text-gray-500' },
+        { name: 'Sales Orders', href: '/sales-orders', icon: Package, color: 'text-gray-500' },
+        { name: 'FPO', href: '/fpo', icon: Truck, color: 'text-gray-500' }
+      ]
+    },
+    {
+      name: 'Direct Purchase Order',
       icon: ShoppingCart,
       color: 'text-gray-500',
       children: [
-        { name: 'Create Purchase Order', href: '/purchase-orders/new', icon: Receipt, color: 'text-gray-500' },
+        { name: 'Create Direct Purchase Order', href: '/purchase-orders/new', icon: Receipt, color: 'text-gray-500' },
         { name: 'Check In Process', href: '/check-in-process', icon: ArrowDownCircle, color: 'text-gray-500' }
       ]
     },
     {
-      name: 'New Sales Order',
+      name: 'Direct Sales Order',
       icon: Package,
       color: 'text-gray-500',
       children: [
