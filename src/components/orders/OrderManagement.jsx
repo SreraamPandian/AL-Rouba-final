@@ -74,13 +74,8 @@ const OrderManagement = () => {
             {showCreate && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
                     <div className="absolute inset-0 bg-black opacity-50" onClick={() => setShowCreate(false)} />
-                    <div className="bg-white w-full max-w-[1200px] max-h-[calc(100vh-120px)] overflow-y-auto rounded-lg shadow-lg z-50 p-6 m-4 pb-32">
+                    <div className="bg-white w-full max-w-[1200px] max-h-[calc(100vh-120px)] overflow-y-auto rounded-lg shadow-lg z-50 p-6 m-4 pb-48 relative">
                         <SalesOrderForm isModal={true} onClose={() => setShowCreate(false)} />
-                        {/* Footer buttons fixed to bottom of modal container */}
-                        <div className="w-full sticky bottom-0 left-0 bg-white border-t py-4 flex justify-end space-x-3 px-6">
-                            <button onClick={() => document.getElementById('sales-order-form-modal')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))} className="px-6 py-2 bg-blue-600 text-white rounded-lg">Create Sale Order</button>
-                            <button onClick={() => setShowCreate(false)} className="px-6 py-2 border border-gray-300 rounded-lg">Close</button>
-                        </div>
                     </div>
                 </div>
             )}

@@ -7,7 +7,7 @@ import BlockRequestModal from '../inventory/BlockRequestModal';
 import { useSalesOrders } from '../../context/SalesOrdersContext';
 import { useReceivedOrders } from '../../context/ReceivedOrdersContext';
 
-const SalesOrderForm = () => {
+const SalesOrderForm = ({ isModal = false, onClose }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { salesOrders, addSalesOrder, updateSalesOrder, getSalesOrder } = useSalesOrders();
@@ -230,7 +230,11 @@ const SalesOrderForm = () => {
       addSalesOrder(orderData);
     }
 
-    navigate('/sales-orders');
+    if (isModal && typeof onClose === 'function') {
+      onClose();
+    } else {
+      navigate('/sales-orders');
+    }
   };
 
   // Helpers for UI rendering
@@ -252,20 +256,22 @@ const SalesOrderForm = () => {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <button
-            onClick={() => navigate('/sales-orders')}
-            className="flex items-center text-gray-600 hover:text-gray-800"
-          >
-            <ArrowLeft size={20} className="mr-1" />
-            Back to Sales Orders
-          </button>
+          {!isModal && (
+            <button
+              onClick={() => navigate('/sales-orders')}
+              className="flex items-center text-gray-600 hover:text-gray-800"
+            >
+              <ArrowLeft size={20} className="mr-1" />
+              Back to Sales Orders
+            </button>
+          )}
           <h1 className="text-2xl font-bold text-gray-800">
-            {isEditing ? 'Edit Sales Order' : 'Create New Sales Order'}
+            {isEditing ? 'Edit Direct Sales Order' : 'Create Direct Sales Order'}
           </h1>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form id={isModal ? 'sales-order-form-modal' : undefined} onSubmit={handleSubmit} className="space-y-6">
         {/* Sales Order Search Section */}
         <div className="bg-white rounded-lg shadow-sm border p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Sales Order Information</h2>
@@ -712,23 +718,30 @@ const SalesOrderForm = () => {
           </div>
         )}
 
-        {/* Form Actions */}
-        <div className="flex items-center justify-end space-x-4">
-          <button
-            type="button"
-            onClick={() => navigate('/sales-orders')}
-            className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
-          >
-            <Save size={16} />
-            <span>{isEditing ? 'Update' : 'Create'} Sales Order</span>
-          </button>
-        </div>
+        {/* Form Actions - modal uses sticky footer so it's always visible */}
+        {isModal ? (
+          <div className="sticky bottom-0 left-0 w-full bg-white border-t py-4 flex justify-end space-x-3 px-6 z-40">
+            <button type="button" onClick={onClose} className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Close</button>
+            <button type="submit" className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"><Save size={16} /><span>Create Sale Order</span></button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-end space-x-4">
+            <button
+              type="button"
+              onClick={() => navigate('/sales-orders')}
+              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
+            >
+              <Save size={16} />
+              <span>{isEditing ? 'Update' : 'Create'} Sales Order</span>
+            </button>
+          </div>
+        )}
       </form>
       {blockModalOpen && blockItem && (
         <BlockRequestModal item={blockItem} onClose={() => setBlockModalOpen(false)} onSubmit={() => { setBlockModalOpen(false); navigate('/blocking'); }} />
