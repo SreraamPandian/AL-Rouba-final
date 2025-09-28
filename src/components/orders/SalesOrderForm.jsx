@@ -260,8 +260,6 @@ const SalesOrderForm = ({ isModal = false, onClose }) => {
 
               <div>
                 <div className="bg-white rounded shadow p-4 sticky top-6">
-                  <label className="block text-sm text-gray-700 mb-2">VAT Type *</label>
-                  <select className="w-full px-3 py-2 border rounded mb-4"><option>-- Select VAT Type --</option></select>
 
                   <div className="text-sm text-gray-600 mb-2">Summary</div>
                   <div className="bg-white border rounded">
