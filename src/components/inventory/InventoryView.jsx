@@ -17,8 +17,6 @@ const InventoryView = ({ item, onClose }) => {
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">BRAND</div><div className="font-medium">{item.name}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">PRODUCT ID</div><div className="font-medium">{item.productId}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">DESCRIPTION</div><div className="font-medium">{item.name} details</div></div>
-                    <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">SELLING PRICE</div><div className="font-medium">{item.sellingPrice}</div></div>
-                    <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">COST PRICE</div><div className="font-medium">{(item.sellingPrice - 0.25).toFixed(3)}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">UOM</div><div className="font-medium">{item.uom}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">QUANTITY ON HAND</div><div className="font-medium">{item.qtyOnHand}</div></div>
                     <div className="p-4 bg-white rounded shadow"> <div className="text-sm text-gray-500">BRANCH</div><div className="font-medium">{item.branch} - Qty ({item.qtyOnHand})</div></div>
