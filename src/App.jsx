@@ -22,6 +22,8 @@ import ReceivedOrderForm from './components/orders/ReceivedOrderForm';
 
 import SalesOrderList from './components/orders/SalesOrderList';
 import SalesOrderForm from './components/orders/SalesOrderForm';
+import CreateNewSaleOrder from './components/orders/CreateNewSaleOrder';
+import ViewSalesOrder from './components/orders/ViewSalesOrder';
 
 // FPO module removed
 // import FPOList from './components/fpo/FPOList';
@@ -87,7 +89,8 @@ function AppRoutes() {
         <Route path="/received-orders/edit/:id" element={<ReceivedOrderForm />} />
 
         <Route path="/sales-orders" element={<SalesOrderList />} />
-        <Route path="/sales-orders/new" element={<SalesOrderForm />} />
+        <Route path="/sales-orders/new" element={<CreateNewSaleOrder />} />
+        <Route path="/sales-orders/view/:id" element={<ViewSalesOrder />} />
         <Route path="/sales-orders/:id" element={<SalesOrderForm />} />
 
         <Route path="/blocking" element={<InventoryBlockingList />} />

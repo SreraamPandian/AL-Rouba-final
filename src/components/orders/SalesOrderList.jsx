@@ -13,7 +13,7 @@ const SalesOrderList = () => {
     {
       key: 'id',
       label: 'Sales Order No.',
-      render: (value, row) => <button onClick={() => navigate(`/sales-orders/${row.id}`)} className="text-blue-600 hover:text-blue-800 font-medium">{value}</button>,
+      render: (value, row) => <span className="text-gray-900 font-medium">{value}</span>,
     },
     {
       key: 'receivedOrderId',
@@ -33,7 +33,7 @@ const SalesOrderList = () => {
       label: 'Actions',
       render: (_, row) => (
         <div className="flex space-x-2">
-          <button onClick={() => navigate(`/sales-orders/${row.id}`)} className="p-1 text-blue-600" title="View"><Eye className="h-4 w-4" /></button>
+          <button onClick={() => navigate(`/sales-orders/view/${row.id}`)} className="p-1 text-blue-600" title="View"><Eye className="h-4 w-4" /></button>
           <button onClick={() => navigate(`/sales-orders/${row.id}`)} className="p-1 text-gray-600" title="Edit"><Edit className="h-4 w-4" /></button>
         </div>
       ),
@@ -55,7 +55,7 @@ const SalesOrderList = () => {
           Create Sale Order
         </button>
       </div>
-      <DataTable columns={columns} data={salesOrders} onRowClick={(row) => navigate(`/sales-orders/${row.id}`)} selectable={true} />
+      <DataTable columns={columns} data={salesOrders} selectable={true} />
     </div>
   );
 };
