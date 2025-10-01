@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Eye, Download } from 'lucide-react';
 import OrderView from './OrderView';
+import { useSalesOrders } from '../../context/SalesOrdersContext';
 
 // --- Helper Components & Icons (for self-containment) ---
 
@@ -35,9 +36,9 @@ const CheckIcon = () => (
 
 // --- Create Sales Order Modal Component ---
 const CreateSalesOrderModal = ({ onClose }) => {
-    // --- STATE MANAGEMENT ---
+    const { addSalesOrder } = useSalesOrders();
 
-    // State for the header section of the form
+    // --- STATE MANAGEMENT ---    // State for the header section of the form
     const [headerData, setHeaderData] = useState({
         customer: '',
         salesOrderDate: new Date().toISOString().slice(0, 10),
@@ -138,10 +139,49 @@ const CreateSalesOrderModal = ({ onClose }) => {
     };
 
     const handleCreateOrder = () => {
-        // In a real app, you would send this data to a server
-        console.log("Creating Sale Order with data:", { headerData, lineItems, summary });
-        alert("Sale Order Created! Check the console for the form data.");
-        onClose();
+        // Validate required fields
+        if (!headerData.customer || !headerData.salesOrderDate || !headerData.expectedDeliveryDate) {
+            alert('Please fill in all required fields (Customer, Sales Order Date, Expected Delivery Date)');
+            return;
+        }
+
+        // Validate line items
+        const validLineItems = lineItems.filter(item =>
+            item.productName && item.quantity > 0 && item.price > 0
+        );
+
+        if (validLineItems.length === 0) {
+            alert('Please add at least one valid product with quantity and price.');
+            return;
+        }
+
+        // Prepare order data for SalesOrdersContext
+        const orderData = {
+            receivedOrderId: `RO-2024-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
+            customer: headerData.customer,
+            deliveryDate: headerData.expectedDeliveryDate,
+            totalValue: grandTotal,
+            items: validLineItems.map((item, index) => ({
+                id: index + 1,
+                product: item.productName,
+                code: item.productId || `PROD-${item.id}`,
+                requestedQty: item.quantity,
+                availableQty: item.quantity,
+                allocatedQty: item.quantity,
+                lineStatus: 'Fully Allocated'
+            }))
+        };
+
+        // Add to sales orders context
+        try {
+            const newOrder = addSalesOrder(orderData);
+            alert(`Sales Order ${newOrder.id} has been created successfully!\nTotal Value: $${grandTotal.toFixed(2)}`);
+            console.log("Created Sale Order:", newOrder);
+            onClose();
+        } catch (error) {
+            console.error('Error creating sales order:', error);
+            alert('Error creating sales order. Please try again.');
+        }
     };
 
     return (
@@ -376,10 +416,10 @@ const OrderManagement = () => {
                     }}
                 >
                     <div
-                        className="bg-white w-full max-w-7xl max-h-[95vh] overflow-hidden rounded-lg shadow-lg"
+                        className="bg-white w-full max-w-7xl max-h-[95vh] overflow-hidden rounded-lg shadow-lg flex flex-col"
                         onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to backdrop
                     >
-                        <div className="h-full overflow-auto">
+                        <div className="flex-1 overflow-y-auto p-6">
                             {/* Render the new sales order form in modal mode */}
                             <CreateSalesOrderModal onClose={() => setShowCreate(false)} />
                         </div>
