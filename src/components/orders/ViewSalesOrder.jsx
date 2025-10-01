@@ -228,8 +228,6 @@ const ViewSalesOrder = () => {
                                         <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Requested</th>
                                         <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Available</th>
                                         <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Allocated</th>
-                                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
-                                        <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Price</th>
                                         <th className="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                     </tr>
                                 </thead>
@@ -242,8 +240,6 @@ const ViewSalesOrder = () => {
                                             <td className="px-4 py-4 text-center text-sm text-gray-900">{product.requested}</td>
                                             <td className="px-4 py-4 text-center text-sm text-gray-900">{product.available}</td>
                                             <td className="px-4 py-4 text-center text-sm font-semibold text-gray-900">{product.allocated}</td>
-                                            <td className="px-4 py-4 text-center text-sm text-gray-900">{salesOrder.currency} {product.unitPrice.toLocaleString()}</td>
-                                            <td className="px-4 py-4 text-center text-sm font-semibold text-gray-900">{salesOrder.currency} {product.totalPrice.toLocaleString()}</td>
                                             <td className="px-4 py-4 text-center">
                                                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadgeColor(product.lineStatus)}`}>
                                                     {product.lineStatus}
