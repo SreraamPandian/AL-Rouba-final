@@ -360,7 +360,9 @@ const SalesOrderForm = ({ isModal = false, onClose }) => {
       {/* Summary */}
       <div className="bg-gray-50 p-4 rounded-lg">
         <div className="flex justify-between items-center">
-
+          <span className="text-lg font-semibold">Total Items: {formData.items.length}</span>
+          <span className="text-lg font-semibold">
+          </span>
         </div>
       </div>
     </div>
