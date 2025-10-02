@@ -8,7 +8,7 @@ const CreateNewSaleOrder = () => {
     const { addSalesOrder } = useSalesOrders();
 
     const [formData, setFormData] = useState({
-        budget: '',
+        saleOrderNo: '',
         status: 'Draft'
     });
 
@@ -17,7 +17,7 @@ const CreateNewSaleOrder = () => {
     const [showBlockModal, setShowBlockModal] = useState(false);
     const [selectedProductForBlock, setSelectedProductForBlock] = useState(null);
 
-    // Sample budgets for dropdown
+    // Sample sale orders for dropdown
     const [budgets] = useState([
         { id: 'PUR/3/0039', customer: 'Tech Solutions Inc.', value: '15,420.50', status: 'Approved' },
         { id: 'PUR/3/0040', customer: 'Digital Systems Ltd.', value: '28,750.75', status: 'Approved' },
@@ -115,8 +115,8 @@ const CreateNewSaleOrder = () => {
 
     const handleGenerateSalesOrder = () => {
         // Validate required fields
-        if (!formData.budget) {
-            alert('Please select a budget.');
+        if (!formData.saleOrderNo) {
+            alert('Please select a sale order.');
             return;
         }
 
@@ -135,7 +135,7 @@ const CreateNewSaleOrder = () => {
 
         // Prepare order data
         const orderData = {
-            receivedOrderId: `RO-${formData.budget.split('/')[2]}`, // Generate received order ID from budget
+            receivedOrderId: `RO-${formData.saleOrderNo.split('/')[2]}`, // Generate received order ID from sale order
             customer: 'Default Customer',
             deliveryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 14 days from now
             totalValue: totalValue,
@@ -185,16 +185,16 @@ const CreateNewSaleOrder = () => {
     const handleInputChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
 
-        // If budget is selected, show product table and load sample data
-        if (field === 'budget' && value.trim()) {
+        // If sale order is selected, show product table and load sample data
+        if (field === 'saleOrderNo' && value.trim()) {
             setShowProductTable(true);
-            // Simulate loading products for the selected budget
+            // Simulate loading products for the selected sale order
             const selectedBudget = budgets.find(budget => budget.id === value);
             if (selectedBudget) {
-                // Budget is selected, can load related products
-                console.log('Selected budget:', selectedBudget);
+                // Sale order is selected, can load related products
+                console.log('Selected sale order:', selectedBudget);
             }
-        } else if (field === 'budget' && !value.trim()) {
+        } else if (field === 'saleOrderNo' && !value.trim()) {
             setShowProductTable(false);
         }
     };
@@ -254,14 +254,14 @@ const CreateNewSaleOrder = () => {
                         <div className="p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Budget *</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Sale Order No *</label>
                                     <div className="relative">
                                         <select
-                                            value={formData.budget}
-                                            onChange={(e) => handleInputChange('budget', e.target.value)}
+                                            value={formData.saleOrderNo}
+                                            onChange={(e) => handleInputChange('saleOrderNo', e.target.value)}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
-                                            <option value="">Select a budget</option>
+                                            <option value="">Select a sale order</option>
                                             {budgets.map(budget => (
                                                 <option key={budget.id} value={budget.id}>
                                                     {budget.id} - {budget.customer} (${budget.value})
