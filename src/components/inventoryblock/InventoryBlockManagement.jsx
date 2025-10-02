@@ -98,6 +98,14 @@ const CreateNewSaleOrder = () => {
         ));
     };
 
+    const handleAllocatableChange = (productId, value) => {
+        setProducts(prev => prev.map(product =>
+            product.id === productId
+                ? { ...product, allocatable: parseInt(value) || 0 }
+                : product
+        ));
+    };
+
     const handleAllocateAll = () => {
         setProducts(prev => prev.map(product => ({
             ...product,
@@ -322,7 +330,15 @@ const CreateNewSaleOrder = () => {
                                                 <td className="px-4 py-5 text-center text-sm text-gray-900">{product.requested}</td>
                                                 <td className="px-4 py-5 text-center text-sm text-gray-900">{product.available}</td>
                                                 <td className="px-4 py-5 text-center text-sm text-gray-900">{product.blocked}</td>
-                                                <td className="px-4 py-5 text-center text-sm font-semibold text-gray-900">{product.allocatable}</td>
+                                                <td className="px-4 py-5 text-center text-sm font-semibold text-gray-900">
+                                                    <input
+                                                        type="number"
+                                                        value={product.allocatable}
+                                                        onChange={(e) => handleAllocatableChange(product.id, e.target.value)}
+                                                        className="w-20 px-2 py-1 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        min="0"
+                                                    />
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>

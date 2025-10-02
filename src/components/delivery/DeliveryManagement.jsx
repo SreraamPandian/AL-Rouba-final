@@ -28,28 +28,23 @@ const CloseIcon = () => (
 
 // --- Sample Data ---
 const initialDeliveryData = [
-    { budgetId: 'BUDGET-01', saleOrderId: 'SO-001', orderId: 1, customerName: 'SHAMSU NASEEM GARDEN', orderDate: '2025-01-01', deliveryDate: '2025-01-01' },
-    { budgetId: 'BUDGET-02', saleOrderId: 'SO-002', orderId: 2, customerName: 'APEX SOLUTIONS LLC', orderDate: '2025-01-02', deliveryDate: '2025-01-03' },
+    { saleOrderId: 'SO-001', orderId: 1, customerName: 'SHAMSU NASEEM GARDEN', vehicleNumber: 'OM-123-AB', driverName: 'John Doe', transportType: 'Own Transport' },
+    { saleOrderId: 'SO-002', orderId: 2, customerName: 'APEX SOLUTIONS LLC', vehicleNumber: 'OM-456-CD', driverName: 'Jane Smith', transportType: 'Third-Party' },
 ];
 
 const saleOrders = {
-    'SO-001': { salesOrderDate: '2025-01-01', customerName: 'SHAMSU NASEEM GARDEN', products: [{ id: 'P101', name: 'Product A', price: 150.00, qty: 2 }] },
-    'SO-002': { salesOrderDate: '2025-01-02', customerName: 'APEX SOLUTIONS LLC', products: [{ id: 'P205', name: 'Product B', price: 300.00, qty: 1 }, { id: 'P101', name: 'Product A', price: 150.00, qty: 3 }] },
-};
-
-const budgetData = {
-    'BUDGET-01': { saleOrderId: 'SO-001' },
-    'BUDGET-02': { saleOrderId: 'SO-002' },
+    'SO-001': { customerName: 'SHAMSU NASEEM GARDEN', products: [{ id: 'P101', name: 'Product A', price: 150.00, qty: 2 }] },
+    'SO-002': { customerName: 'APEX SOLUTIONS LLC', products: [{ id: 'P205', name: 'Product B', price: 300.00, qty: 1 }, { id: 'P101', name: 'Product A', price: 150.00, qty: 3 }] },
 };
 
 const inventoryData = {
     'SO-001': [
-        { id: 'COMP-001', name: 'High-Performance Processor', requested: 50, available: 75, blocked: 10, allocatable: 65, status: 'Pending' },
+        { id: 'COMP-001', name: 'High-Performance Processor', requested: 50, available: 75, blocked: 10, allocatable: 65 },
     ],
     'SO-002': [
-        { id: 'MEM-002', name: 'DDR5 Memory Module', requested: 100, available: 80, blocked: 0, allocatable: 80, status: 'Pending' },
-        { id: 'STO-003', name: 'NVMe SSD Drive', requested: 25, available: 0, blocked: 0, allocatable: 0, status: 'Pending' },
-        { id: 'CASE-007', name: 'Server Casing', requested: 10, available: 10, blocked: 0, allocatable: 10, status: 'Pending' },
+        { id: 'MEM-002', name: 'DDR5 Memory Module', requested: 100, available: 80, blocked: 0, allocatable: 80 },
+        { id: 'STO-003', name: 'NVMe SSD Drive', requested: 25, available: 0, blocked: 0, allocatable: 0 },
+        { id: 'CASE-007', name: 'Server Casing', requested: 10, available: 10, blocked: 0, allocatable: 10 },
     ]
 };
 
@@ -132,32 +127,17 @@ const InventoryAllocation = ({ saleOrderId }) => {
 // --- Add Delivery Modal Component ---
 const AddDeliveryModal = ({ isOpen, onClose, onSave }) => {
     const [formData, setFormData] = useState({
-        budgetId: '',
         saleOrderId: '',
-        deliveryDate: new Date().toISOString().slice(0, 10),
+        vehicleNumber: '',
+        driverName: '',
+        transportType: ''
     });
     const [selectedOrderDetails, setSelectedOrderDetails] = useState(null);
 
-    const updateFormForSaleOrder = (orderId) => {
-        setFormData(prev => ({ ...prev, saleOrderId: orderId }));
-        setSelectedOrderDetails(saleOrders[orderId] || null);
-    };
-
-    const handleBudgetChange = (e) => {
-        const budgetId = e.target.value;
-        setFormData(prev => ({ ...prev, budgetId: budgetId }));
-        const associatedSaleOrder = budgetData[budgetId]?.saleOrderId;
-        if (associatedSaleOrder) {
-            updateFormForSaleOrder(associatedSaleOrder);
-        } else {
-            updateFormForSaleOrder('');
-        }
-    };
-
     const handleSaleOrderChange = (e) => {
         const orderId = e.target.value;
-        setFormData(prev => ({ ...prev, budgetId: '' }));
-        updateFormForSaleOrder(orderId);
+        setFormData(prev => ({ ...prev, saleOrderId: orderId }));
+        setSelectedOrderDetails(saleOrders[orderId] || null);
     };
 
     const handleChange = (e) => {
@@ -166,17 +146,17 @@ const AddDeliveryModal = ({ isOpen, onClose, onSave }) => {
     };
 
     const handleSave = () => {
-        if (!formData.saleOrderId || !formData.deliveryDate) {
-            alert('Please fill all required fields.');
+        if (!formData.saleOrderId) {
+            alert('Please select a Sale Order ID.');
             return;
         }
         const newDelivery = {
             orderId: Date.now(), // Use a unique ID
-            budgetId: formData.budgetId,
             saleOrderId: formData.saleOrderId,
             customerName: selectedOrderDetails?.customerName || 'N/A',
-            orderDate: selectedOrderDetails?.salesOrderDate || 'N/A',
-            deliveryDate: formData.deliveryDate,
+            vehicleNumber: formData.vehicleNumber,
+            driverName: formData.driverName,
+            transportType: formData.transportType,
         };
         onSave(newDelivery);
         onClose(); // Close modal after saving
@@ -194,13 +174,6 @@ const AddDeliveryModal = ({ isOpen, onClose, onSave }) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Budget ID</label>
-                        <select name="budgetId" value={formData.budgetId} onChange={handleBudgetChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select Budget ID</option>
-                            {Object.keys(budgetData).map(id => <option key={id} value={id}>{id}</option>)}
-                        </select>
-                    </div>
-                    <div>
                         <label className="text-sm font-medium text-gray-700">Sale Order ID</label>
                         <select name="saleOrderId" value={formData.saleOrderId} onChange={handleSaleOrderChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                             <option value="">Select Sale Order</option>
@@ -208,16 +181,24 @@ const AddDeliveryModal = ({ isOpen, onClose, onSave }) => {
                         </select>
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Sales Order Date</label>
-                        <input type="text" value={selectedOrderDetails?.salesOrderDate || ''} readOnly className="mt-1 block w-full p-2 bg-gray-100 border border-gray-300 rounded-md" />
-                    </div>
-                    <div>
                         <label className="text-sm font-medium text-gray-700">Customer Name</label>
                         <input type="text" value={selectedOrderDetails?.customerName || ''} readOnly className="mt-1 block w-full p-2 bg-gray-100 border border-gray-300 rounded-md" />
                     </div>
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Delivery Date *</label>
-                        <input type="date" name="deliveryDate" value={formData.deliveryDate} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                        <label className="text-sm font-medium text-gray-700">Vehicle Number</label>
+                        <input type="text" name="vehicleNumber" value={formData.vehicleNumber} onChange={handleChange} placeholder="Vehicle Number" className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">Driver Name</label>
+                        <input type="text" name="driverName" value={formData.driverName} onChange={handleChange} placeholder="Driver Name" className="mt-1 block w-full p-2 border border-gray-300 rounded-md" />
+                    </div>
+                    <div className="md:col-span-2">
+                        <label className="text-sm font-medium text-gray-700">Transport Type</label>
+                        <select name="transportType" value={formData.transportType} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            <option value="">--- Select ---</option>
+                            <option value="Own Transport">Own Transport</option>
+                            <option value="Third-Party">Third-Party</option>
+                        </select>
                     </div>
                 </div>
 
@@ -279,8 +260,6 @@ const App = () => {
 
     const handlePrint = (deliveryRow) => {
         const orderDetails = saleOrders[deliveryRow.saleOrderId];
-
-        // Create print content
         const printContent = `
             <!DOCTYPE html>
             <html>
@@ -297,7 +276,6 @@ const App = () => {
                         line-height: 1.4;
                     }
                     .header { text-align: center; margin-bottom: 20px; }
-                    .company-info { text-align: center; margin-bottom: 30px; }
                     .bill-to { margin-bottom: 20px; }
                     .details-table { 
                         width: 100%; 
@@ -330,25 +308,38 @@ const App = () => {
                         border: 1px solid #000;
                         padding: 40px 10px;
                     }
-                    .print-button {
+                    .print-controls {
+                        background: #f5f5f5;
+                        padding: 15px;
+                        border: 1px solid #ddd;
+                        margin-bottom: 20px;
+                        text-align: center;
+                    }
+                    .print-btn {
                         background: #3b82f6;
                         color: white;
                         border: none;
                         padding: 10px 20px;
                         border-radius: 5px;
                         cursor: pointer;
-                        margin: 20px;
+                        margin: 0 10px;
                         font-size: 16px;
                     }
-                    .print-button:hover {
+                    .print-btn:hover {
                         background: #2563eb;
+                    }
+                    .close-btn {
+                        background: #6b7280;
+                    }
+                    .close-btn:hover {
+                        background: #4b5563;
                     }
                 </style>
             </head>
             <body>
-                <div class="no-print">
-                    <button class="print-button" onclick="window.print()">🖨️ Print Delivery Challan</button>
-                    <button class="print-button" onclick="window.close()" style="background: #6b7280;">✕ Close</button>
+                <div class="print-controls no-print">
+                    <button class="print-btn" onclick="window.print()">🖨️ Print Delivery Challan</button>
+                    <button class="print-btn close-btn" onclick="window.close()">✕ Close</button>
                 </div>
                 
                 <div class="header">
@@ -370,18 +361,18 @@ const App = () => {
                 <table class="details-table">
                     <tr>
                         <td><strong>Delivery Challan #</strong><br>MKF/DC/2025/0001</td>
-                        <td><strong>Challan Date #</strong><br>${new Date(deliveryRow.deliveryDate).toLocaleDateString()}</td>
+                        <td><strong>Challan Date #</strong><br>${new Date().toLocaleDateString()}</td>
                         <td><strong>Order ID #</strong><br>${deliveryRow.saleOrderId}</td>
-                        <td><strong>Order Date #</strong><br>${new Date(deliveryRow.orderDate).toLocaleDateString()}</td>
+                        <td><strong>Order Date #</strong><br>${new Date().toLocaleDateString()}</td>
                     </tr>
                 </table>
 
                 <table class="details-table">
                     <tr>
                         <td><strong>Number Of Box #</strong></td>
-                        <td><strong>Driver Name</strong></td>
-                        <td><strong>Vehicle Number #</strong></td>
-                        <td><strong>Transport Type #</strong><br>Own Transport</td>
+                        <td><strong>Driver Name</strong><br>${deliveryRow.driverName || 'N/A'}</td>
+                        <td><strong>Vehicle Number #</strong><br>${deliveryRow.vehicleNumber || 'N/A'}</td>
+                        <td><strong>Transport Type #</strong><br>${deliveryRow.transportType || 'Own Transport'}</td>
                     </tr>
                 </table>
 
@@ -430,65 +421,74 @@ const App = () => {
             </html>
         `;
 
-        // Try multiple approaches for better compatibility
+        // Try multiple methods for better compatibility across browsers and deployment environments
         try {
-            // Method 1: Try opening in new window (preferred)
+            // Method 1: Try opening new window (works when popups are allowed)
             const printWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
 
-            if (printWindow) {
+            if (printWindow && !printWindow.closed) {
                 printWindow.document.write(printContent);
                 printWindow.document.close();
 
-                // Wait for content to load before focusing and printing
+                // Wait for content to load before focusing
                 printWindow.onload = function () {
                     printWindow.focus();
                 };
 
-                // Add a small delay to ensure content is rendered
+                // Fallback focus after delay
                 setTimeout(() => {
                     if (printWindow && !printWindow.closed) {
                         printWindow.focus();
                     }
                 }, 500);
             } else {
-                // Method 2: Fallback - Create blob URL and open in new tab
+                // Method 2: Use Blob URL if popup was blocked
                 const blob = new Blob([printContent], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
-                const newWindow = window.open(url, '_blank');
+                const newTab = window.open(url, '_blank');
 
-                if (!newWindow) {
-                    // Method 3: Last resort - Download as HTML file
+                if (!newTab) {
+                    // Method 3: Download as HTML file if all popup methods fail
                     const link = document.createElement('a');
                     link.href = url;
-                    link.download = `delivery-challan-${deliveryRow.saleOrderId}.html`;
+                    link.download = `delivery-challan-${deliveryRow.saleOrderId}-${Date.now()}.html`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
 
-                    alert('Popup blocked! Delivery challan downloaded as HTML file. Open it and print from your browser.');
+                    alert('Popup blocked! Delivery challan saved as HTML file. Open it in your browser and print.');
                 }
             }
         } catch (error) {
             console.error('Print error:', error);
-            // Method 4: Alternative download method
-            const element = document.createElement('a');
-            const file = new Blob([printContent], { type: 'text/html' });
-            element.href = URL.createObjectURL(file);
-            element.download = `delivery-challan-${deliveryRow.saleOrderId}.html`;
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
 
-            alert('Print failed! Delivery challan downloaded as HTML file. Open it and print from your browser.');
+            // Method 4: Last resort - download HTML file
+            try {
+                const blob = new Blob([printContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `delivery-challan-${deliveryRow.saleOrderId}-${Date.now()}.html`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                alert('Print failed. Delivery challan saved as HTML file. Open it in your browser and print.');
+            } catch (downloadError) {
+                console.error('Download error:', downloadError);
+                alert('Print functionality is not available in this environment. Please contact support.');
+            }
         }
     };
 
     const filteredData = useMemo(() => {
         return deliveryData.filter(item =>
             item.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (item.budgetId && item.budgetId.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (item.saleOrderId && item.saleOrderId.toLowerCase().includes(searchTerm.toLowerCase()))
+            (item.saleOrderId && item.saleOrderId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (item.driverName && item.driverName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (item.vehicleNumber && item.vehicleNumber.toLowerCase().includes(searchTerm.toLowerCase()))
         ).slice(0, entries);
     }, [deliveryData, searchTerm, entries]);
 
@@ -543,11 +543,11 @@ const App = () => {
                         <table className="w-full text-sm text-left">
                             <thead className="bg-blue-600 text-white uppercase text-xs">
                                 <tr>
-                                    <th className="p-3">Budget ID</th>
                                     <th className="p-3">Sale Order ID</th>
-                                    <th className="p-3">Sales Order Date</th>
                                     <th className="p-3">Customer Name</th>
-                                    <th className="p-3">Delivery Date</th>
+                                    <th className="p-3">Vehicle Number</th>
+                                    <th className="p-3">Driver Name</th>
+                                    <th className="p-3">Transport Type</th>
                                     <th className="p-3 text-center">Action</th>
                                 </tr>
                             </thead>
@@ -555,11 +555,11 @@ const App = () => {
                                 {filteredData.map((row) => (
                                     <React.Fragment key={row.orderId}>
                                         <tr onClick={() => toggleRowExpansion(row.orderId)} className="bg-white border-b hover:bg-gray-50 cursor-pointer">
-                                            <td className="p-3 text-gray-700">{row.budgetId}</td>
                                             <td className="p-3 text-gray-700">{row.saleOrderId}</td>
-                                            <td className="p-3 text-gray-700">{row.orderDate}</td>
                                             <td className="p-3 font-medium text-gray-900">{row.customerName}</td>
-                                            <td className="p-3 text-gray-700">{row.deliveryDate}</td>
+                                            <td className="p-3 text-gray-700">{row.vehicleNumber}</td>
+                                            <td className="p-3 text-gray-700">{row.driverName}</td>
+                                            <td className="p-3 text-gray-700">{row.transportType}</td>
                                             <td className="p-3 text-center">
                                                 <button
                                                     onClick={(e) => {
@@ -603,4 +603,5 @@ const App = () => {
 };
 
 export default App;
+
 
