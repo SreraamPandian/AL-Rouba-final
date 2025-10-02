@@ -279,26 +279,78 @@ const App = () => {
 
     const handlePrint = (deliveryRow) => {
         const orderDetails = saleOrders[deliveryRow.saleOrderId];
+
+        // Create print content
         const printContent = `
             <!DOCTYPE html>
             <html>
             <head>
                 <title>Delivery Challan</title>
                 <style>
-                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    @media print {
+                        body { margin: 0; }
+                        .no-print { display: none !important; }
+                    }
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 20px; 
+                        line-height: 1.4;
+                    }
                     .header { text-align: center; margin-bottom: 20px; }
                     .company-info { text-align: center; margin-bottom: 30px; }
                     .bill-to { margin-bottom: 20px; }
-                    .details-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-                    .details-table td { border: 1px solid #000; padding: 8px; }
-                    .product-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
-                    .product-table th, .product-table td { border: 1px solid #000; padding: 8px; text-align: center; }
-                    .footer { margin-top: 50px; }
-                    .signature-section { display: flex; justify-content: space-between; margin-top: 50px; }
-                    .signature-box { width: 30%; text-align: center; }
+                    .details-table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        margin-bottom: 20px; 
+                    }
+                    .details-table td { 
+                        border: 1px solid #000; 
+                        padding: 8px; 
+                        vertical-align: top;
+                    }
+                    .product-table { 
+                        width: 100%; 
+                        border-collapse: collapse; 
+                        margin-bottom: 30px; 
+                    }
+                    .product-table th, .product-table td { 
+                        border: 1px solid #000; 
+                        padding: 8px; 
+                        text-align: center; 
+                    }
+                    .signature-section { 
+                        display: flex; 
+                        justify-content: space-between; 
+                        margin-top: 50px; 
+                    }
+                    .signature-box { 
+                        width: 30%; 
+                        text-align: center; 
+                        border: 1px solid #000;
+                        padding: 40px 10px;
+                    }
+                    .print-button {
+                        background: #3b82f6;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin: 20px;
+                        font-size: 16px;
+                    }
+                    .print-button:hover {
+                        background: #2563eb;
+                    }
                 </style>
             </head>
             <body>
+                <div class="no-print">
+                    <button class="print-button" onclick="window.print()">🖨️ Print Delivery Challan</button>
+                    <button class="print-button" onclick="window.close()" style="background: #6b7280;">✕ Close</button>
+                </div>
+                
                 <div class="header">
                     <h2>MKF HATCHERY AT BARKA -001</h2>
                     <p>C.R. No.: 1310495 PO Box No.: 547, Postal Code: 320, Barka, Sultanate of Oman.</p>
@@ -378,12 +430,58 @@ const App = () => {
             </html>
         `;
 
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(printContent);
-        printWindow.document.close();
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
+        // Try multiple approaches for better compatibility
+        try {
+            // Method 1: Try opening in new window (preferred)
+            const printWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+
+            if (printWindow) {
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+
+                // Wait for content to load before focusing and printing
+                printWindow.onload = function () {
+                    printWindow.focus();
+                };
+
+                // Add a small delay to ensure content is rendered
+                setTimeout(() => {
+                    if (printWindow && !printWindow.closed) {
+                        printWindow.focus();
+                    }
+                }, 500);
+            } else {
+                // Method 2: Fallback - Create blob URL and open in new tab
+                const blob = new Blob([printContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const newWindow = window.open(url, '_blank');
+
+                if (!newWindow) {
+                    // Method 3: Last resort - Download as HTML file
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `delivery-challan-${deliveryRow.saleOrderId}.html`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+
+                    alert('Popup blocked! Delivery challan downloaded as HTML file. Open it and print from your browser.');
+                }
+            }
+        } catch (error) {
+            console.error('Print error:', error);
+            // Method 4: Alternative download method
+            const element = document.createElement('a');
+            const file = new Blob([printContent], { type: 'text/html' });
+            element.href = URL.createObjectURL(file);
+            element.download = `delivery-challan-${deliveryRow.saleOrderId}.html`;
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+
+            alert('Print failed! Delivery challan downloaded as HTML file. Open it and print from your browser.');
+        }
     };
 
     const filteredData = useMemo(() => {

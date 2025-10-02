@@ -8,8 +8,7 @@ const CreateNewSaleOrder = () => {
     const { addSalesOrder } = useSalesOrders();
 
     const [formData, setFormData] = useState({
-        budget: '',
-        status: 'Draft'
+        budget: ''
     });
 
     const [selectedProducts, setSelectedProducts] = useState([]);
@@ -231,15 +230,6 @@ const CreateNewSaleOrder = () => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
-                            <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm">
-                                {formData.status}
-                            </span>
-                            <button
-                                onClick={handleAllocateAll}
-                                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                            >
-                                Allocate All Available
-                            </button>
                             <button
                                 onClick={handleGenerateSalesOrder}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
