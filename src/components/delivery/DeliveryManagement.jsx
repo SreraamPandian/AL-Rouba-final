@@ -202,27 +202,6 @@ const AddDeliveryModal = ({ isOpen, onClose, onSave }) => {
                     </div>
                 </div>
 
-                <table className="w-full text-sm text-left mb-6">
-                    <thead className="bg-blue-600 text-white uppercase text-xs">
-                        <tr>
-                            <th className="p-3">Product ID</th>
-                            <th className="p-3">Product Name</th>
-                            <th className="p-3">Price</th>
-                            <th className="p-3">Qty</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedOrderDetails?.products.map(p => (
-                            <tr key={p.id} className="border-b">
-                                <td className="p-3">{p.id}</td>
-                                <td className="p-3">{p.name}</td>
-                                <td className="p-3">{p.price.toFixed(2)}</td>
-                                <td className="p-3">{p.qty}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
                 {selectedOrderDetails && (
                     <div className="mb-6">
                         <InventoryAllocation saleOrderId={formData.saleOrderId} />
