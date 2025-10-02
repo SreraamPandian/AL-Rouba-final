@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Search, Download } from 'lucide-react';
+import { Plus, Eye, Search, Download } from 'lucide-react';
 import { useReceivedOrders } from '../../context/ReceivedOrdersContext';
 
 const ReceivedOrderList = () => {
@@ -94,10 +94,11 @@ const ReceivedOrderList = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.branch}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
-                      onClick={() => navigate(`/received-orders/edit/${order.id}`)}
-                      className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors"
+                      onClick={() => navigate(`/received-orders/view/${order.id}`)}
+                      className="flex items-center px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
                     >
-                      Edit
+                      <Eye className="h-4 w-4 mr-1" />
+                      View
                     </button>
                   </td>
                 </tr>

@@ -19,11 +19,15 @@ import QuotationCreateEdit from './components/quotation/QuotationCreateEdit';
 
 import ReceivedOrderList from './components/orders/ReceivedOrderList';
 import ReceivedOrderForm from './components/orders/ReceivedOrderForm';
+import ReceivedOrderView from './components/orders/ReceivedOrderView';
 
 import SalesOrderList from './components/orders/SalesOrderList';
 import SalesOrderForm from './components/orders/SalesOrderForm';
 import CreateNewSaleOrder from './components/orders/CreateNewSaleOrder';
 import ViewSalesOrder from './components/orders/ViewSalesOrder';
+
+import DeliveryManagement from './components/delivery/DeliveryManagement';
+import InventoryBlockManagement from './components/inventoryblock/InventoryBlockManagement';
 
 // FPO module removed
 // import FPOList from './components/fpo/FPOList';
@@ -86,12 +90,23 @@ function AppRoutes() {
 
         <Route path="/received-orders" element={<ReceivedOrderList />} />
         <Route path="/received-orders/new" element={<ReceivedOrderForm />} />
+        <Route path="/received-orders/view/:id" element={<ReceivedOrderView />} />
         <Route path="/received-orders/edit/:id" element={<ReceivedOrderForm />} />
 
         <Route path="/sales-orders" element={<SalesOrderList />} />
         <Route path="/sales-orders/new" element={<CreateNewSaleOrder />} />
         <Route path="/sales-orders/view/:id" element={<ViewSalesOrder />} />
         <Route path="/sales-orders/:id" element={<SalesOrderForm />} />
+
+        <Route path="/delivery-management" element={<DeliveryManagement />} />
+        <Route path="/delivery-management/new" element={<DeliveryManagement />} />
+        <Route path="/delivery-management/view/:id" element={<DeliveryManagement />} />
+        <Route path="/delivery-management/edit/:id" element={<DeliveryManagement />} />
+
+        <Route path="/inventory-block" element={<InventoryBlockManagement />} />
+        <Route path="/inventory-block/new" element={<InventoryBlockManagement />} />
+        <Route path="/inventory-block/view/:id" element={<InventoryBlockManagement />} />
+        <Route path="/inventory-block/edit/:id" element={<InventoryBlockManagement />} />
 
         <Route path="/blocking" element={<InventoryBlockingList />} />
         <Route path="/blocking/:id" element={<InventoryBlockDetails />} />

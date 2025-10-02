@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Home, MessageSquare, Calculator, ShoppingCart,
   Package, Lock, Truck, ArrowDownCircle, ArrowUpCircle,
-  Receipt, Archive, X, Building2, FileText, ChevronDown
+  Receipt, Archive, X, Building2, FileText, ChevronDown,
+  MapPin, Shield
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -27,7 +28,9 @@ const Sidebar = ({ isOpen, onClose }) => {
         { name: 'Budget and Quote', href: '/budgets', icon: Calculator, color: 'text-gray-500' },
         { name: 'Received Orders', href: '/received-orders', icon: ShoppingCart, color: 'text-gray-500' },
         { name: 'Sales Orders', href: '/sales-orders', icon: Package, color: 'text-gray-500' },
-        { name: 'FPO', href: '/fpo', icon: Truck, color: 'text-gray-500' }
+        { name: 'Delivery Management', href: '/delivery-management', icon: Truck, color: 'text-gray-500' },
+        { name: 'Inventory Block', href: '/inventory-block', icon: Shield, color: 'text-gray-500' },
+        { name: 'FPO', href: '/fpo', icon: MapPin, color: 'text-gray-500' }
       ]
     },
     {
@@ -49,7 +52,7 @@ const Sidebar = ({ isOpen, onClose }) => {
         { name: 'Invoice', href: '/invoices', icon: ArrowDownCircle, color: 'text-gray-500' }
       ]
     },
-    { name: 'Inventory Blocking', href: '/blocking', icon: Lock, color: 'text-gray-500' },
+    { name: 'Inventory Release', href: '/blocking', icon: Lock, color: 'text-gray-500' },
     { name: 'Inventory Management', href: '/inventory-management', icon: Package, color: 'text-gray-500' },
     {
       name: 'Master',

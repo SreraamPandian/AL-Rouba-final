@@ -231,22 +231,6 @@ const CreateNewSaleOrder = () => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
-                            <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm">
-                                {formData.status}
-                            </span>
-                            <button
-                                onClick={handleAllocateAll}
-                                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                            >
-                                Allocate All Available
-                            </button>
-                            <button
-                                onClick={handleGenerateSalesOrder}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
-                            >
-                                <Save className="h-4 w-4" />
-                                <span>Generate Sales Order</span>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -347,58 +331,24 @@ const CreateNewSaleOrder = () => {
                         </div>
                     )}
 
-                    {/* Delivery Schedule - Only show when products are visible */}
+                    {/* Block Inventory Button - Only show when budget is selected */}
                     {showProductTable && (
-                        <div className="bg-white rounded-lg shadow">
-                            <div className="px-6 py-4 border-b">
-                                <div className="flex items-center justify-between">
-                                    <h2 className="text-lg font-medium text-gray-900">Delivery Schedule</h2>
-                                    <button
-                                        onClick={handleAddShipment}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2 text-sm"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                        <span>Add Shipment</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="px-6 py-8">
-                                <p className="text-gray-500 text-center">No shipments scheduled. Add one to plan deliveries.</p>
-                            </div>
+                        <div className="flex justify-end mt-6">
+                            <button
+                                onClick={() => setShowBlockModal(true)}
+                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 font-semibold shadow-md transition-colors"
+                            >
+                                <Lock className="h-5 w-5" />
+                                <span>Block Inventory</span>
+                            </button>
                         </div>
                     )}
 
-                    {/* Shipping Instructions & Attachments - Only show when products are visible */}
-                    {showProductTable && (
-                        <div className="bg-white rounded-lg shadow">
-                            <div className="px-6 py-4 border-b">
-                                <h2 className="text-lg font-medium text-gray-900">Shipping Instructions & Attachments</h2>
-                            </div>
-                            <div className="p-6 space-y-4">
-                                <div>
-                                    <textarea
-                                        value={shippingInstructions}
-                                        onChange={(e) => setShippingInstructions(e.target.value)}
-                                        placeholder="Add special notes or instructions for shipping..."
-                                        rows={4}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                </div>
-                                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                    <p className="text-sm text-gray-500">Upload LPO or other supporting docs</p>
-                                    <button className="mt-2 text-sm text-blue-600 hover:text-blue-700">
-                                        Browse files
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
 
             {/* Request Inventory Block Modal */}
-            {showBlockModal && selectedProductForBlock && (
+            {showBlockModal && (
                 <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4"
                     onClick={(e) => {
@@ -425,8 +375,13 @@ const CreateNewSaleOrder = () => {
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Product</label>
-                                <p className="text-sm text-gray-900">{selectedProductForBlock.name}</p>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Product</label>
+                                <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Select Product</option>
+                                    <option value="Product A">Product A</option>
+                                    <option value="Product B">Product B</option>
+                                    <option value="Product C">Product C</option>
+                                </select>
                             </div>
 
                             <div>
@@ -436,7 +391,6 @@ const CreateNewSaleOrder = () => {
                                     defaultValue="0"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     min="0"
-                                    max={selectedProductForBlock.available}
                                 />
                             </div>
 

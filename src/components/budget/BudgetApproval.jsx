@@ -15,20 +15,20 @@ const BudgetApproval = () => {
     const budget = findBudget(decodedId);
     const [editable, setEditable] = useState(() => {
         if (!budget) return null;
-        // clone minimal editable subset to local state
+        // clone minimal editable subset to local state with sample data
         return {
-            employee: budget.employee || '',
+            employee: budget.employee || 'System User',
             branch: budget.branch || '',
-            enquiryId: budget.enquiryId || '',
-            budgetDate: budget.budgetDate || new Date().toISOString().split('T')[0],
+            enquiryId: budget.enquiryId || 'PCENQ0000000',
+            budgetDate: budget.budgetDate || '2025-10-02',
             notes: budget.notes || '',
-            paymentDays: budget.paymentDays || budget.budgetDetails?.paymentDays || '',
-            taxType: budget.taxType || budget.budgetDetails?.taxType || '',
-            deliveryDays: budget.deliveryDays || budget.budgetDetails?.deliveryDays || '',
-            licensesOffering: budget.licensesOffering || budget.budgetDetails?.licensesOffering || '',
-            paymentTerm: budget.paymentTerm || budget.budgetDetails?.paymentTerm || '',
+            paymentDays: budget.paymentDays || budget.budgetDetails?.paymentDays || '30 Days',
+            taxType: budget.taxType || budget.budgetDetails?.taxType || 'VAT 5%',
+            deliveryDays: budget.deliveryDays || budget.budgetDetails?.deliveryDays || '14 Days',
+            licensesOffering: budget.licensesOffering || budget.budgetDetails?.licensesOffering || 'Standard',
+            paymentTerm: budget.paymentTerm || budget.budgetDetails?.paymentTerm || 'Advance',
             currency: budget.currency || budget.budgetDetails?.currency || 'OMR',
-            shipping: budget.shipping || budget.budgetDetails?.shipping || '',
+            shipping: budget.shipping || budget.budgetDetails?.shipping || 'FOB',
             discount: budget.discount ?? 0,
             vat: budget.vat ?? 5,
             freightCharges: {
@@ -36,12 +36,76 @@ const BudgetApproval = () => {
                 airFreight: budget.freightCharges?.airFreight || 0,
                 seaFreight: budget.freightCharges?.seaFreight || 0,
             },
-            products: (budget.products || []).map(p => ({ ...p }))
+            products: (budget.products || [
+                {
+                    id: '1',
+                    name: 'High-Performance Server',
+                    description: 'Enterprise grade server with 32GB RAM and 1TB SSD',
+                    qty: 2,
+                    unit: 'Pieces',
+                    unitPrice: 2500,
+                    buyingTax: 5,
+                    margin: 25,
+                    sellingTax: 5
+                },
+                {
+                    id: '2',
+                    name: 'Network Switch',
+                    description: '24-port Gigabit Ethernet switch with PoE+',
+                    qty: 1,
+                    unit: 'Pieces',
+                    unitPrice: 800,
+                    buyingTax: 5,
+                    margin: 30,
+                    sellingTax: 5
+                },
+                {
+                    id: '3',
+                    name: 'UPS System',
+                    description: '2kVA Online UPS with battery backup',
+                    qty: 1,
+                    unit: 'Pieces',
+                    unitPrice: 1200,
+                    buyingTax: 5,
+                    margin: 20,
+                    sellingTax: 5
+                }
+            ]).map(p => ({ ...p }))
         };
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalActionType, setModalActionType] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const toggleEdit = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const saveEdits = () => {
+        // Save the current editable state to the budget
+        updateBudget(decodedId, {
+            employee: editable.employee,
+            branch: editable.branch,
+            enquiryId: editable.enquiryId,
+            budgetDate: editable.budgetDate,
+            notes: editable.notes,
+            paymentDays: editable.paymentDays,
+            taxType: editable.taxType,
+            deliveryDays: editable.deliveryDays,
+            licensesOffering: editable.licensesOffering,
+            paymentTerm: editable.paymentTerm,
+            currency: editable.currency,
+            shipping: editable.shipping,
+            discount: editable.discount,
+            vat: editable.vat,
+            freightCharges: editable.freightCharges,
+            products: editable.products
+        });
+
+        setIsEditing(false);
+        alert('Budget details updated successfully!');
+    };
 
     const openModal = (actionType) => {
         setModalActionType(actionType);
@@ -128,19 +192,19 @@ const BudgetApproval = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Entered By:</label>
-                            <input value={editable.employee} onChange={(e) => setEditable(prev => ({ ...prev, employee: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                            <input value={editable.employee} onChange={(e) => setEditable(prev => ({ ...prev, employee: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Branch:</label>
-                            <input value={editable.branch} onChange={(e) => setEditable(prev => ({ ...prev, branch: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                            <input value={editable.branch} onChange={(e) => setEditable(prev => ({ ...prev, branch: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Enquiry ID:</label>
-                            <input value={editable.enquiryId} onChange={(e) => setEditable(prev => ({ ...prev, enquiryId: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                            <input value={editable.enquiryId} onChange={(e) => setEditable(prev => ({ ...prev, enquiryId: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
                         </div>
                         <div className="md:col-span-1">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Budget Date:</label>
-                            <input type="date" value={editable.budgetDate} onChange={(e) => setEditable(prev => ({ ...prev, budgetDate: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                            <input type="date" value={editable.budgetDate} onChange={(e) => setEditable(prev => ({ ...prev, budgetDate: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
                         </div>
                     </div>
                 </div>
@@ -148,17 +212,17 @@ const BudgetApproval = () => {
                 <div className="bg-white rounded-lg shadow p-6">
                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Budget Details</h2>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <input value={editable.paymentDays} onChange={(e) => setEditable(prev => ({ ...prev, paymentDays: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-                        <input value={editable.taxType} onChange={(e) => setEditable(prev => ({ ...prev, taxType: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-                        <input value={editable.deliveryDays} onChange={(e) => setEditable(prev => ({ ...prev, deliveryDays: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-                        <input value={editable.licensesOffering} onChange={(e) => setEditable(prev => ({ ...prev, licensesOffering: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-                        <input value={editable.paymentTerm} onChange={(e) => setEditable(prev => ({ ...prev, paymentTerm: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-                        <input value={editable.currency} onChange={(e) => setEditable(prev => ({ ...prev, currency: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
-                        <input value={editable.shipping} onChange={(e) => setEditable(prev => ({ ...prev, shipping: e.target.value }))} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                        <input value={editable.paymentDays} onChange={(e) => setEditable(prev => ({ ...prev, paymentDays: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
+                        <input value={editable.taxType} onChange={(e) => setEditable(prev => ({ ...prev, taxType: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
+                        <input value={editable.deliveryDays} onChange={(e) => setEditable(prev => ({ ...prev, deliveryDays: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
+                        <input value={editable.licensesOffering} onChange={(e) => setEditable(prev => ({ ...prev, licensesOffering: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
+                        <input value={editable.paymentTerm} onChange={(e) => setEditable(prev => ({ ...prev, paymentTerm: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
+                        <input value={editable.currency} onChange={(e) => setEditable(prev => ({ ...prev, currency: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
+                        <input value={editable.shipping} onChange={(e) => setEditable(prev => ({ ...prev, shipping: e.target.value }))} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
                     </div>
                     <div className="mb-6">
                         <label className="block text-sm font-medium mb-2 text-gray-700">Notes:</label>
-                        <textarea value={editable.notes} onChange={(e) => setEditable(prev => ({ ...prev, notes: e.target.value }))} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                        <textarea value={editable.notes} onChange={(e) => setEditable(prev => ({ ...prev, notes: e.target.value }))} rows={3} className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} />
                     </div>
 
                     <h3 className="text-lg font-medium mb-4">Products</h3>
@@ -184,14 +248,14 @@ const BudgetApproval = () => {
                                             <td className="px-4 py-2 border">{p.name}</td>
                                             <td className="px-4 py-2 border">{p.description}</td>
                                             <td className="px-4 py-2 border">{p.unit}</td>
-                                            <td className="px-4 py-2 border"><input type="number" value={p.qty} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, qty: parseFloat(e.target.value) || 0 } : x) }))} className="w-20 px-2 py-1 border rounded" /></td>
-                                            <td className="px-4 py-2 border"><input type="number" value={p.unitPrice} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, unitPrice: parseFloat(e.target.value) || 0 } : x) }))} className="w-24 px-2 py-1 border rounded" /></td>
-                                            <td className="px-4 py-2 border"><input type="number" value={p.buyingTax} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, buyingTax: parseFloat(e.target.value) || 0 } : x) }))} className="w-20 px-2 py-1 border rounded" /></td>
+                                            <td className="px-4 py-2 border"><input type="number" value={p.qty} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, qty: parseFloat(e.target.value) || 0 } : x) }))} className={`w-20 px-2 py-1 border rounded ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} /></td>
+                                            <td className="px-4 py-2 border"><input type="number" value={p.unitPrice} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, unitPrice: parseFloat(e.target.value) || 0 } : x) }))} className={`w-24 px-2 py-1 border rounded ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} /></td>
+                                            <td className="px-4 py-2 border"><input type="number" value={p.buyingTax} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, buyingTax: parseFloat(e.target.value) || 0 } : x) }))} className={`w-20 px-2 py-1 border rounded ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} /></td>
                                             <td className="px-4 py-2 border">{totalBuying.toFixed(2)}</td>
                                             <td className="px-4 py-2 border">{totalBuyingWithTax.toFixed(2)}</td>
-                                            <td className="px-4 py-2 border"><input type="number" value={p.margin} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, margin: parseFloat(e.target.value) || 0 } : x) }))} className="w-20 px-2 py-1 border rounded" /></td>
+                                            <td className="px-4 py-2 border"><input type="number" value={p.margin} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, margin: parseFloat(e.target.value) || 0 } : x) }))} className={`w-20 px-2 py-1 border rounded ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} /></td>
                                             <td className="px-4 py-2 border">{sellingPrice.toFixed(2)}</td>
-                                            <td className="px-4 py-2 border"><input type="number" value={p.sellingTax} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, sellingTax: parseFloat(e.target.value) || 0 } : x) }))} className="w-20 px-2 py-1 border rounded" /></td>
+                                            <td className="px-4 py-2 border"><input type="number" value={p.sellingTax} onChange={(e) => setEditable(prev => ({ ...prev, products: prev.products.map((x, i) => i === rowIdx ? { ...x, sellingTax: parseFloat(e.target.value) || 0 } : x) }))} className={`w-20 px-2 py-1 border rounded ${!isEditing ? 'bg-gray-100' : ''}`} disabled={!isEditing} /></td>
                                             <td className="px-4 py-2 border">{totalSelling.toFixed(2)}</td>
                                             <td className="px-4 py-2 border">{totalSellingWithTax.toFixed(2)}</td>
                                         </tr>
@@ -231,20 +295,39 @@ const BudgetApproval = () => {
             </div>
 
             <div className="fixed bottom-0 left-0 lg:left-64 right-0 bg-white border-t p-4 shadow-lg flex justify-end space-x-4">
-                <button
-                    onClick={() => openModal('Reject')}
-                    className="flex items-center px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold"
-                >
-                    <X className="h-5 w-5 mr-2" />
-                    Reject
-                </button>
-                <button
-                    onClick={() => openModal('Approve')}
-                    className="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold"
-                >
-                    <Check className="h-5 w-5 mr-2" />
-                    Approve
-                </button>
+                {isEditing ? (
+                    <>
+                        <button
+                            onClick={() => setIsEditing(false)}
+                            className="flex items-center px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={saveEdits}
+                            className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+                        >
+                            Save Changes
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <button
+                            onClick={toggleEdit}
+                            className="flex items-center px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+                        >
+                            <X className="h-5 w-5 mr-2" />
+                            Edit
+                        </button>
+                        <button
+                            onClick={() => openModal('Approve')}
+                            className="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold"
+                        >
+                            <Check className="h-5 w-5 mr-2" />
+                            Approve
+                        </button>
+                    </>
+                )}
             </div>
 
             {isModalOpen && (
